@@ -26,7 +26,7 @@
   <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
   
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dracula.min.css" />
   
 
   
@@ -54,7 +54,7 @@
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
-       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+       href="/">&nbsp;<strong>小楼昨夜又秋风</strong>&nbsp;</a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -179,6 +179,14 @@
 
   
   
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-post-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-post-views"></span> 次
+      </span>
+    
+  
 </div>
 
             
@@ -202,13 +210,19 @@
         <div class="py-5" id="board">
           <div class="post-content mx-auto" id="post">
             
+              <p class="note note-info">
+                
+                  本文最后更新于：2020年5月31日 下午
+                
+              </p>
+            
             <article class="markdown-body">
               <h1 id="项目一实战总结"><a href="#项目一实战总结" class="headerlink" title="项目一实战总结"></a>项目一实战总结</h1><h2 id="会员统计"><a href="#会员统计" class="headerlink" title="会员统计"></a>会员统计</h2><p>设计年龄段，0-6岁为婴儿，7-12岁为少儿，13-17岁为青少年，18-45岁为青年、46-69岁为中年、&gt;69岁为老年，为达到一目了然各个年龄段的人数高低，选择柱状图展示。</p>
 <blockquote>
 <p><strong>心得</strong></p>
 <p>使用ECharts很容易达到效果，使用时我们不需要关系样式怎么设置，直接去<a href="https://echarts.apache.org/examples/zh/index.html" target="_blank" rel="noopener">ECharts官网</a>找到合适的案例，粘贴到页面上即可。重要的是根据案例中的数据，构造出合适的数据模型动态的赋值。</p>
 </blockquote>
-<h4 id="前端调用实现"><a href="#前端调用实现" class="headerlink" title="前端调用实现"></a>前端调用实现</h4><pre><code class="hljs javascript"><span class="hljs-comment">// 基于准备好的dom，初始化echarts实例</span>
+<h4 id="前端调用实现"><a href="#前端调用实现" class="headerlink" title="前端调用实现"></a>前端调用实现</h4><div class="hljs"><pre><code class="hljs javascript"><span class="hljs-comment">// 基于准备好的dom，初始化echarts实例</span>
         <span class="hljs-keyword">var</span> myChart1 = echarts.init(<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'chart1'</span>));
 
         axios.get(<span class="hljs-string">"/report/getMemberAgeReport.do"</span>).then(<span class="hljs-function">(<span class="hljs-params">res</span>)=&gt;</span>&#123;
@@ -233,9 +247,9 @@
                     &#125;]
                 &#125;
                 );
-        &#125;);</code></pre>
+        &#125;);</code></pre></div>
 
-<h4 id="后台逻辑"><a href="#后台逻辑" class="headerlink" title="后台逻辑"></a>后台逻辑</h4><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/getMemberAgeReport"</span>)
+<h4 id="后台逻辑"><a href="#后台逻辑" class="headerlink" title="后台逻辑"></a>后台逻辑</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/getMemberAgeReport"</span>)
     <span class="hljs-function"><span class="hljs-keyword">public</span> Result <span class="hljs-title">getMemberAgeReport</span><span class="hljs-params">()</span> </span>&#123;
         List&lt;Map&lt;String,Object&gt;&gt; ageStagesMapList = memberService.findMemberCountByBirthdy();
         Map&lt;String, Object&gt; data = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();
@@ -259,9 +273,9 @@
             <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Result(<span class="hljs-keyword">true</span>, <span class="hljs-string">"查询成功"</span>, data);
         &#125;
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Result(<span class="hljs-keyword">false</span>, <span class="hljs-string">"查询失败"</span>);
-    &#125;</code></pre>
+    &#125;</code></pre></div>
 
-<pre><code>#### SQL</code></pre><pre><code class="hljs mysql">&lt;select id&#x3D;&quot;findMemberCountByBirthdy&quot; resultType&#x3D;&quot;map&quot;&gt;
+<div class="hljs"><pre><code>#### SQL</code></pre></div><div class="hljs"><pre><code class="hljs mysql">&lt;select id&#x3D;&quot;findMemberCountByBirthdy&quot; resultType&#x3D;&quot;map&quot;&gt;
         SELECT t.name,COUNT(1) as num FROM (SELECT  CASE
         WHEN  ROUND(DATEDIFF(CURDATE(), birthday)&#x2F;365.2422)&gt; 0 AND ROUND(DATEDIFF(CURDATE(), birthday)&#x2F;365.2422)&lt;  6  THEN &#39;婴幼儿&#39;
         WHEN  ROUND(DATEDIFF(CURDATE(), birthday)&#x2F;365.2422)&gt;&#x3D;7 AND ROUND(DATEDIFF(CURDATE(), birthday)&#x2F;365.2422)&lt;   12  THEN &#39;少儿&#39;
@@ -271,7 +285,7 @@
         WHEN  ROUND(DATEDIFF(CURDATE(), birthday)&#x2F;365.2422)&gt;&#x3D;79 AND ROUND(DATEDIFF(CURDATE(), birthday)&#x2F;365.2422)&lt;   89  THEN &#39;老年&#39;
         WHEN  ROUND(DATEDIFF(CURDATE(), birthday)&#x2F;365.2422)&gt;&#x3D;90 THEN &#39;90以上&#39;
         ELSE &#39;未知&#39; END as name FROM t_member) as t GROUP BY t.name;
-    &lt;&#x2F;select&gt;</code></pre>
+    &lt;&#x2F;select&gt;</code></pre></div>
 
 <blockquote>
 <p><img src="http://www.qfeng.online/imgs/test-02.PNG" srcset="/img/loading.gif" alt=""><strong>SQL分析</strong></p>
@@ -344,6 +358,12 @@
 
 <!-- Custom -->
 
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://octodex.github.com/images/jetpacktocat.png" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
+    </div>
+  </div>
+
 
     
   </main>
@@ -391,6 +411,31 @@
         <span>Fluid</span></a>
     </div>
     
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
 
     
 
@@ -518,6 +563,55 @@
 
 
 
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
 
 
 
@@ -526,6 +620,20 @@
 
 
 
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 
 
 
