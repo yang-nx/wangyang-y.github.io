@@ -126,6 +126,18 @@
             </li>
           
         
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
         
           <li class="nav-item" id="search-btn">
             <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
@@ -138,7 +150,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/img/default.png') no-repeat center center;
+         style="background: url('http://www.qfeng.online/imgs/%E6%84%8F%E5%A4%A7%E5%88%A9%E9%A3%8E%E6%83%85.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -163,7 +175,7 @@
           >
           
             <div class="about-avatar">
-              <img src="/img/avatar.png" srcset="/img/loading.gif"
+              <img src="http://www.qfeng.online/imgs/Spring-Boot/avatar.png" srcset="/img/loading.gif"
                    class="img-fluid" alt="avatar">
             </div>
           
@@ -174,14 +186,14 @@
 
 <div class="text-center">
   <div class="about-info">
-    <div class="about-name">myname</div>
-    <div class="about-intro">一句简短的介绍</div>
+    <div class="about-name">鲸升</div>
+    <div class="about-intro"></div>
     <div class="about-icons">
       
         
         
         
-        <a href="https://github.com" class="
+        <a href="https://github.com/wangyang-y" class="
            hint--bottom hint--rounded"
            aria-label=GitHub
         >
@@ -192,11 +204,11 @@
         
         
         
-        <a href="https://douban.com" class="
+        <a href="https://gitee.com/wangyangwy" class="
            hint--bottom hint--rounded"
-           aria-label=豆瓣
+           aria-label=码云
         >
-          <i class="iconfont icon-douban-fill" aria-hidden="true"></i>
+          <i class="iconfont icon-gitee-fill" aria-hidden="true"></i>
           
         </a>
       
@@ -209,7 +221,7 @@
         >
           <i class="iconfont icon-wechat-fill" aria-hidden="true"></i>
           
-            <img class="qr-img" src="/img/favicon.png" srcset="/img/loading.gif" alt="qrcode" />
+            <img class="qr-img" src="http://www.qfeng.online/imgs/Spring-Boot/my_weixin.jpg" srcset="/img/loading.gif" alt="qrcode" />
           
         </a>
       
@@ -260,6 +272,29 @@
   
 
   
+    <!-- APlayer 音乐播放器 -->
+    <div id="aplayer"></div>
+    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
+<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
+<script type="text/javascript">
+  var oldLoadAp = window.onload;
+  window.onload = function () {
+    oldLoadAp && oldLoadAp();
+
+    new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,
+      autoplay: 'false' === 'true',
+      loop: 'all',
+      order: 'random',
+      theme: '#b7daff',
+      preload: 'none',
+      audio: [{"name":"光るなら","artist":"Goose house","url":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.mp3","cover":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg","lrc":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.lrc","theme":"#ebd0c2"},{"name":"トリカゴ","artist":"XX:me","url":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.mp3","cover":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.jpg","lrc":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.lrc","theme":"#46718b"},{"name":"前前前世","artist":"RADWIMPS","url":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.mp3","cover":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.jpg","lrc":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.lrc","theme":"#505d6b"}]
+    });
+  }
+</script>
+
+  
 
   
 
@@ -278,27 +313,46 @@
 
     
       
-        <!-- LeanCloud 统计PV -->
-        <span id="leancloud-site-pv-container" style="display: none">
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
             总访问量 
-            <span id="leancloud-site-pv"></span>
+            <span id="busuanzi_value_site_pv"></span>
              次
           </span>
       
       
-        <!-- LeanCloud 统计UV -->
-        <span id="leancloud-site-uv-container" style="display: none">
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
             总访客数 
-            <span id="leancloud-site-uv"></span>
+            <span id="busuanzi_value_site_uv"></span>
              人
           </span>
       
-
     
   </div>
 
 
     
+  <!-- 备案信息 -->
+  <div class="beian">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">京ICP证123456号</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>京公网安备12345678号</span>
+      </a>
+     
+  </div>
+
 
     
   </div>
@@ -324,6 +378,8 @@
 
 
 
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
 
 
 
@@ -335,7 +391,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "关于&nbsp;",
+        "(追逐 | 平静)&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
@@ -437,6 +493,25 @@
 
 
 
+  <script>(function (i, s, o, g, r, a, m) {
+      i['DaoVoiceObject'] = r;
+      i[r] = i[r] ||
+        function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        };
+      i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      a.charset = 'utf-8';
+      m.parentNode.insertBefore(a, m);
+    })(window, document, 'script', ('https:' === document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/njle6dvf8tyjdnearvsglk8hw946jea2shynmfm2.js", 'daovoice');
+    daovoice('init', {
+      app_id: "njle6dvf8tyjdnearvsglk8hw946jea2shynmfm2",
+    });
+    daovoice('update');
+  </script>
 
 
 
@@ -445,6 +520,18 @@
 
 
 
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?df3bfd24a00a0340c927e9a1c1e5ef73";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
   
 
   
