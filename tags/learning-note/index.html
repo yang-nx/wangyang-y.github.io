@@ -41,10 +41,6 @@
 
 
 <body>
-<link rel="stylesheet" href="/dist/APlayer.min.css">
-<div id="aplayer"></div>
-<script type="text/javascript" src="/dist/APlayer.min.js"></script>
-<script type="text/javascript" src="/dist/music.js"></script>
   <header style="height: 80vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
@@ -121,18 +117,6 @@
             </li>
           
         
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/links/">
-                <i class="iconfont icon-link-fill"></i>
-                友链
-              </a>
-            </li>
-          
-        
         
           <li class="nav-item" id="search-btn">
             <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
@@ -145,7 +129,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('http://www.qfeng.online/imgs/%E6%84%8F%E5%A4%A7%E5%88%A9%E9%A3%8E%E6%83%85.jpg') no-repeat center center;
+         style="background: url('/img/default.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -230,29 +214,6 @@
   
 
   
-    <!-- APlayer 音乐播放器 -->
-    <div id="aplayer"></div>
-    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
-<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
-<script type="text/javascript">
-  var oldLoadAp = window.onload;
-  window.onload = function () {
-    oldLoadAp && oldLoadAp();
-
-    new APlayer({
-      container: document.getElementById('aplayer'),
-      fixed: true,
-      autoplay: 'false' === 'true',
-      loop: 'all',
-      order: 'random',
-      theme: '#b7daff',
-      preload: 'none',
-      audio: [{"name":"name","artist":"artist","url":"/songs/test.mp3","cover":"/img/cover.jpg"},{"name":"name","artist":"artist","url":"https://...url.mp3","cover":"https://...cover.jpg"}]
-    });
-  }
-</script>
-
-  
 
   
 
@@ -271,46 +232,27 @@
 
     
       
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
             总访问量 
-            <span id="busuanzi_value_site_pv"></span>
+            <span id="leancloud-site-pv"></span>
              次
           </span>
       
       
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
             总访客数 
-            <span id="busuanzi_value_site_uv"></span>
+            <span id="leancloud-site-uv"></span>
              人
           </span>
       
+
     
   </div>
 
 
     
-  <!-- 备案信息 -->
-  <div class="beian">
-    <a href="http://beian.miit.gov.cn/" target="_blank"
-       rel="nofollow noopener">京ICP证123456号</a>
-    
-      <a
-        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
-        rel="nofollow noopener"
-        class="beian-police"
-        target="_blank"
-      >
-        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
-        
-          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
-        
-        <span>京公网安备12345678号</span>
-      </a>
-     
-  </div>
-
 
     
   </div>
@@ -335,8 +277,6 @@
   <script  src="/js/clipboard-use.js" ></script>
 
 
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
@@ -436,25 +376,6 @@
 
 
 
-  <script>(function (i, s, o, g, r, a, m) {
-      i['DaoVoiceObject'] = r;
-      i[r] = i[r] ||
-        function () {
-          (i[r].q = i[r].q || []).push(arguments);
-        };
-      i[r].l = 1 * new Date();
-      a = s.createElement(o);
-      m = s.getElementsByTagName(o)[0];
-      a.async = 1;
-      a.src = g;
-      a.charset = 'utf-8';
-      m.parentNode.insertBefore(a, m);
-    })(window, document, 'script', ('https:' === document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/njle6dvf8tyjdnearvsglk8hw946jea2shynmfm2.js", 'daovoice');
-    daovoice('init', {
-      app_id: "njle6dvf8tyjdnearvsglk8hw946jea2shynmfm2",
-    });
-    daovoice('update');
-  </script>
 
 
 
@@ -463,18 +384,6 @@
 
 
 
-
-  
-    <!-- Baidu Analytics -->
-    <script defer>
-      var _hmt = _hmt || [];
-      (function () {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?df3bfd24a00a0340c927e9a1c1e5ef73";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-      })();
-    </script>
   
 
   
