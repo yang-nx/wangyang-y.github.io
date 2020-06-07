@@ -176,7 +176,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.1k 字
+      5.9k 字
     </span>
   
 
@@ -186,7 +186,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      69
+      80
        分钟
     </span>
   
@@ -226,7 +226,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月4日 下午
+                  本文最后更新于：2020年6月5日 下午
                 
               </p>
             
@@ -932,10 +932,121 @@ xxxxxProperties: 配置类来封装配置文件的内容</code></pre></div>
 <p><strong>org.springframework.boot.autoconfigure.web：web的所有自动场景；</strong></p>
 <p>If you want to keep Spring Boot MVC features, and you just want to add additional <a href="https://docs.spring.io/spring/docs/4.3.14.RELEASE/spring-framework-reference/htmlsingle#mvc" target="_blank" rel="noopener">MVC configuration</a> (interceptors, formatters, view controllers etc.) you can add your own <code>@Configuration</code> class of type <code>WebMvcConfigurerAdapter</code>, but <strong>without</strong> <code>@EnableWebMvc</code>. If you wish to provide custom instances of <code>RequestMappingHandlerMapping</code>, <code>RequestMappingHandlerAdapter</code> or <code>ExceptionHandlerExceptionResolver</code> you can declare a <code>WebMvcRegistrationsAdapter</code> instance providing such components.</p>
 <p>If you want to take complete control of Spring MVC, you can add your own <code>@Configuration</code> annotated with <code>@EnableWebMvc</code>.</p>
+<h4 id="2、扩展SpringMVC"><a href="#2、扩展SpringMVC" class="headerlink" title="2、扩展SpringMVC"></a>2、扩展SpringMVC</h4><blockquote>
+<p><strong>1.0的是继承WebMvcConfigurerAdapter类</strong></p>
+<p><strong>2.0+是实现WebMvcConfigurer接口</strong></p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs xm">&lt;mvc:view-controller path&#x3D;&quot;&#x2F;hello&quot; view-name&#x3D;&quot;success&quot;&#x2F;&gt;
+    &lt;mvc:interceptors&gt;
+        &lt;mvc:interceptor&gt;
+            &lt;mvc:mapping path&#x3D;&quot;&#x2F;hello&quot;&#x2F;&gt;
+            &lt;bean&gt;&lt;&#x2F;bean&gt;
+        &lt;&#x2F;mvc:interceptor&gt;
+    &lt;&#x2F;mvc:interceptors&gt;</code></pre></div>
+
+
+
+<p><code>编写一个配置类（@Configuration）,是WebMvcConfigurer类型；不能标注@EnableWebMvc</code></p>
+<p>既保留了所有的自动配置，也能用我们的扩展配置</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MySpringConfig</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">WebMvcConfigurer</span> </span>&#123;
+    <span class="hljs-comment">//添加自定义的视图解析器</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addViewControllers</span><span class="hljs-params">(ViewControllerRegistry registry)</span> </span>&#123;
+        <span class="hljs-comment">//浏览器发送/he请求到success页面</span>
+        registry.addViewController(<span class="hljs-string">"/he"</span>).setViewName(<span class="hljs-string">"success"</span>);
+
+    &#125;
+&#125;</code></pre></div>
+
+<p>原理：</p>
+<p>​    1）、WebMvcAutoConfiguration是SpringMVC的自动配置类</p>
+<p>​    2）、在做其他自动配置时会导入；@Import(<strong>EnableWebMvcConfiguration</strong>.class)</p>
+<div class="hljs"><pre><code class="hljs java">   <span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EnableWebMvcConfiguration</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">DelegatingWebMvcConfiguration</span> </span>&#123;
+     <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> WebMvcConfigurerComposite configurers = <span class="hljs-keyword">new</span> WebMvcConfigurerComposite();
+
+ <span class="hljs-comment">//从容器中获取所有的WebMvcConfigurer</span>
+     <span class="hljs-meta">@Autowired</span>(required = <span class="hljs-keyword">false</span>)
+     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setConfigurers</span><span class="hljs-params">(List&lt;WebMvcConfigurer&gt; configurers)</span> </span>&#123;
+         <span class="hljs-keyword">if</span> (!CollectionUtils.isEmpty(configurers)) &#123;
+             <span class="hljs-keyword">this</span>.configurers.addWebMvcConfigurers(configurers);
+           	<span class="hljs-comment">//一个参考实现；将所有的WebMvcConfigurer相关配置都来一起调用；  </span>
+           	<span class="hljs-meta">@Override</span>
+            <span class="hljs-comment">// public void addViewControllers(ViewControllerRegistry registry) &#123;</span>
+             <span class="hljs-comment">//    for (WebMvcConfigurer delegate : this.delegates) &#123;</span>
+              <span class="hljs-comment">//       delegate.addViewControllers(registry);</span>
+              <span class="hljs-comment">//   &#125;</span>
+             &#125;
+         &#125;
+&#125;</code></pre></div>
+
+<p>​    3）、容器中所有的WebMvcConfigurer都会一起起作用；</p>
+<p>​    4）、我们的配置类也会被调用；</p>
+<p>​    效果：SpringMVC的自动配置和我们的扩展配置都会起作用；</p>
+<h4 id="3、全面接管SpringMVC；"><a href="#3、全面接管SpringMVC；" class="headerlink" title="3、全面接管SpringMVC；"></a>3、全面接管SpringMVC；</h4><p>SpringBoot对SpringMVC的自动配置不需要了，所有都是我们自己配置；所有的SpringMVC的自动配置都失效了</p>
+<p><strong>我们需要在配置类中添加@EnableWebMvc即可；</strong></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//使用WebMvcConfigurerAdapter可以来扩展SpringMVC的功能</span>
+<span class="hljs-meta">@EnableWebMvc</span>
+<span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyMvcConfig</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">WebMvcConfigurerAdapter</span> </span>&#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addViewControllers</span><span class="hljs-params">(ViewControllerRegistry registry)</span> </span>&#123;
+       <span class="hljs-comment">// super.addViewControllers(registry);</span>
+        <span class="hljs-comment">//浏览器发送 /atguigu 请求来到 success</span>
+        registry.addViewController(<span class="hljs-string">"/atguigu"</span>).setViewName(<span class="hljs-string">"success"</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<p>原理：</p>
+<p>为什么@EnableWebMvc自动配置就失效了；</p>
+<p>1）@EnableWebMvc的核心</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Import</span>(DelegatingWebMvcConfiguration<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>
+<span class="hljs-class"><span class="hljs-title">public</span> @<span class="hljs-title">interface</span> <span class="hljs-title">EnableWebMvc</span> </span>&#123;</code></pre></div>
+
+<p>2）、</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DelegatingWebMvcConfiguration</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">WebMvcConfigurationSupport</span> </span>&#123;</code></pre></div>
+
+<p>3）、</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-meta">@ConditionalOnWebApplication</span>
+<span class="hljs-meta">@ConditionalOnClass</span>(&#123; Servlet<span class="hljs-class">.<span class="hljs-keyword">class</span>, <span class="hljs-title">DispatcherServlet</span>.<span class="hljs-title">class</span>,</span>
+<span class="hljs-class">		<span class="hljs-title">WebMvcConfigurerAdapter</span>.<span class="hljs-title">class</span> &#125;)</span>
+<span class="hljs-class">//容器中没有这个组件的时候，这个自动配置类才生效</span>
+<span class="hljs-class">@<span class="hljs-title">ConditionalOnMissingBean</span>(<span class="hljs-title">WebMvcConfigurationSupport</span>.<span class="hljs-title">class</span>)</span>
+<span class="hljs-class">@<span class="hljs-title">AutoConfigureOrder</span>(<span class="hljs-title">Ordered</span>.<span class="hljs-title">HIGHEST_PRECEDENCE</span> + 10)</span>
+<span class="hljs-class">@<span class="hljs-title">AutoConfigureAfter</span>(</span>&#123; DispatcherServletAutoConfiguration<span class="hljs-class">.<span class="hljs-keyword">class</span>,</span>
+<span class="hljs-class">		<span class="hljs-title">ValidationAutoConfiguration</span>.<span class="hljs-title">class</span> &#125;)</span>
+<span class="hljs-class"><span class="hljs-title">public</span> <span class="hljs-title">class</span> <span class="hljs-title">WebMvcAutoConfiguration</span> </span>&#123;</code></pre></div>
+
+<p>4）、@EnableWebMvc将WebMvcConfigurationSupport组件导入进来；</p>
+<p>5）、导入的WebMvcConfigurationSupport只是SpringMVC最基本的功能；</p>
 <h3 id="5、如何修改SpringBoot的默认配置"><a href="#5、如何修改SpringBoot的默认配置" class="headerlink" title="5、如何修改SpringBoot的默认配置"></a>5、如何修改SpringBoot的默认配置</h3><p>只需要把要修改的配置添加到容器中，就能被spring boot 使用到</p>
 <p>模式：</p>
 <p>1）Sprig Boot 在自动配置很多组件的时候，先看容器中有没有用户配置的（@Bean、@Component）如果有就使用用户配置的，没有，才自动配置；有些 组件还可以有多个（比如viewResolver）将用户的配置和自己的默认配置组合起来。</p>
+<p> 2）、在SpringBoot中会有非常多的xxxConfigurer帮助我们进行扩展配置</p>
+<p>3）、在SpringBoot中会有很多的xxxCustomizer帮助我们进行定制配置</p>
+<h3 id="6、RestfulCRUD"><a href="#6、RestfulCRUD" class="headerlink" title="6、RestfulCRUD"></a>6、RestfulCRUD</h3><p>准备工作：将静态资源导入工程中。引入需要的webjars，修改模板文件的引用地址。</p>
+<h4 id="1、默认访问首页"><a href="#1、默认访问首页" class="headerlink" title="1、默认访问首页"></a>1、默认访问首页</h4><blockquote>
+<p>可以直接在Controller中写映射，也可以在配置类中定义</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MySpringConfig</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">WebMvcConfigurer</span> </span>&#123;
+    <span class="hljs-comment">//添加自定义的视图解析器</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addViewControllers</span><span class="hljs-params">(ViewControllerRegistry registry)</span> </span>&#123;
+        <span class="hljs-comment">//浏览器发送/he请求到success页面</span>
+        registry.addViewController(<span class="hljs-string">"/he"</span>).setViewName(<span class="hljs-string">"success"</span>);
+        <span class="hljs-comment">//默认访问登录页面</span>
+        registry.addViewController(<span class="hljs-string">"/"</span>).setViewName(<span class="hljs-string">"login"</span>);
+        registry.addViewController(<span class="hljs-string">"/login.html"</span>).setViewName(<span class="hljs-string">"login"</span>);
+    &#125;
+&#125;</code></pre></div>
 
+<h4 id="2、国际化"><a href="#2、国际化" class="headerlink" title="2、国际化"></a>2、国际化</h4><h5 id="1）、编写国际化配置文件"><a href="#1）、编写国际化配置文件" class="headerlink" title="1）、编写国际化配置文件"></a>1）、编写国际化配置文件</h5><h5 id="2）、使用ResourceBundleMessage管理国际化资源文件"><a href="#2）、使用ResourceBundleMessage管理国际化资源文件" class="headerlink" title="2）、使用ResourceBundleMessage管理国际化资源文件"></a>2）、使用ResourceBundleMessage管理国际化资源文件</h5><h5 id="3）、在页面中使用ftm-message取出国际化内容"><a href="#3）、在页面中使用ftm-message取出国际化内容" class="headerlink" title="3）、在页面中使用ftm:message取出国际化内容"></a>3）、在页面中使用ftm:message取出国际化内容</h5><p>步骤：</p>
+<h5 id="1）、编写国际化配置文件，抽取页面需要显示的国际化信息"><a href="#1）、编写国际化配置文件，抽取页面需要显示的国际化信息" class="headerlink" title="1）、编写国际化配置文件，抽取页面需要显示的国际化信息"></a>1）、编写国际化配置文件，抽取页面需要显示的国际化信息</h5>
             </article>
             <hr>
             <div>
