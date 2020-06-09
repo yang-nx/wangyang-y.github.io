@@ -176,7 +176,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      558 字
+      1k 字
     </span>
   
 
@@ -186,7 +186,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      12
        分钟
     </span>
   
@@ -285,8 +285,68 @@
             <p>docker  volume 对数据卷执行操作</p><p>Commands:<br>  create      Create a volume<br>  inspect     Display detailed information on one or more volumes<br>  ls          List volumes<br>  prune       Remove all unused local volumes<br>  rm          Remove one or more volumes</p>
           </div>
 
+<div class="hljs"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 查看所有的volume 情况</span>
+docker volume ls</code></pre></div>
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E5%8C%BF%E5%90%8D%E5%8D%B7%E6%8C%82%E8%BD%BD.jpg" srcset="/img/loading.gif" alt></p>
+<div class="note note-primary">
+            <p><strong>-v 卷名：容器名</strong></p><p><code>docker volume inspect</code> [卷名]  来查看下这个卷的信息</p>
+          </div>
 
 
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/volume-inspect.jpg" srcset="/img/loading.gif" alt></p>
+<p>所有容器中卷在没有指定目录的情况下，都在<code>/var/lib/docker/volumes/XXX/_data</code></p>
+<p>通过具名挂载我们可以方便得找到这个卷</p>
+<p><strong>如何去区别是具名挂载还是匿名挂载，还是指定路径挂载</strong></p>
+<div class="hljs"><pre><code class="hljs shell">-v 容器内路径   # 匿名挂载
+-v 卷名:容器内路径 # 具名挂载
+-v /宿主机的目录：容器内的目录  #指定路径挂载</code></pre></div>
+
+
+
+<p><strong>扩展：</strong></p>
+<div class="hljs"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 通过 -v 容器内路径：ro  rw 来改变读写权限</span>
+ro readonlly # 只读
+rw  readwrite # 可读可写
+
+<span class="hljs-meta">#</span><span class="bash"> 一旦设置了权限，那么容器中挂载出来的内容就有了限制，</span>
+docker run -d -P --name nginx01 -v /etc/nginx:ro nginx  # 在容器中只能读
+docker run -d -P --name nginx01 -v /etc/nginx:rw nginx  # 在容器中可读可写</code></pre></div>
+
+<h3 id="4、初识Dockerfile"><a href="#4、初识Dockerfile" class="headerlink" title="4、初识Dockerfile"></a>4、初识Dockerfile</h3><p>Dockerfile 就是用来构建docker镜像的构建文件！命令脚本！</p>
+<div class="note note-primary">
+            <p>方式二：通过Dockerfile来生成镜像</p>
+          </div>
+
+
+
+<p><strong>编写dockerfile脚本文件</strong></p>
+<div class="hljs"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 通过这个脚本可以生成镜像（指令都是大写）</span>
+<span class="hljs-meta">#</span><span class="bash"> 这里的每条命令就是镜像的一层</span>
+FROM centos
+
+VOLUME ["volume01","volume02"]
+
+CMD echo "---end---"
+
+CMD /bin/bash</code></pre></div>
+
+<p><strong>通过dockerfile脚本文件构建镜像</strong></p>
+<div class="hljs"><pre><code class="hljs shell">docker build -f [dockerfile文件的路径] -t [要生成的目标镜像] .
+
+[root@iZbp1baf0xyn152a53kixrZ docker-test-volume]# docker build -f dockerfile -t wangyang/centos .</code></pre></div>
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/dockerfile%E7%94%9F%E6%88%90%E9%95%9C%E5%83%8F.jpg" srcset="/img/loading.gif" alt></p>
+<p><strong>查看脚本生成的镜像</strong></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E6%9F%A5%E7%9C%8B%E8%84%9A%E6%9C%AC%E7%94%9F%E6%88%90%E7%9A%84%E9%95%9C%E5%83%8F.jpg" srcset="/img/loading.gif" alt></p>
+<p><strong>启动我们自己生成的容器</strong></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker01.jpg" srcset="/img/loading.gif" alt></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker03.jpg" srcset="/img/loading.gif" alt></p>
+<p>这个卷一定和外部的一个目录映射上了。是匿名挂载，在/var/bin/docker/可以找到这两个挂载得卷。</p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E6%9F%A5%E7%9C%8B%E6%8C%82%E8%BD%BD%E7%9A%84%E9%95%9C%E5%83%8F.jpg" srcset="/img/loading.gif" alt></p>
+<p><strong>在容器中挂载的目录下，新建个文件，测试对应的外部下是否同步了这个文件</strong></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker00.jpg" srcset="/img/loading.gif" alt></p>
 <h1 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h1><h1 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h1>
             </article>
             <hr>
