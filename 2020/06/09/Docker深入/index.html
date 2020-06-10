@@ -176,7 +176,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.2k 字
+      1.6k 字
     </span>
   
 
@@ -186,7 +186,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      14
+      19
        分钟
     </span>
   
@@ -226,7 +226,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月10日 早上
+                  本文最后更新于：2020年6月10日 下午
                 
               </p>
             
@@ -370,7 +370,41 @@ CMD /bin/bash</code></pre></div>
             <p><strong>结论：</strong></p><p>容器之间配置信息的传递，数据卷容器的生命周期一直持续到没有容器使用为止。但是一旦持久化到本地，那么本地的数据不会删除。</p>
           </div>
 
-<h1 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h1><h1 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h1>
+<h1 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h1><div class="note note-primary">
+            <p><strong>dockerfile是用来构建docker镜像的文件！命令参数脚本</strong></p><p>构建步骤：</p><p>1、编写一个dockerfile文件</p><p>2、docker build 构建成为一个镜像</p><p>3、docker run 运行镜像</p><p>4、docker push 发布镜像（DockerHub、阿里云镜像仓库）</p>
+          </div>
+
+
+
+<p><code>可以查看官方是怎么做的，模仿官方</code></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker07.jpg" srcset="/img/loading.gif" alt></p>
+<p>很多官方镜像都是基础包，很多功能没有，我们通常会自己搭建自己的镜像！</p>
+<h2 id="DockerFile的构建过程"><a href="#DockerFile的构建过程" class="headerlink" title="DockerFile的构建过程"></a>DockerFile的构建过程</h2><p><strong>基础知识</strong></p>
+<ol>
+<li><p>每个保留关键字（指令）都必须是大写</p>
+</li>
+<li><p>执行从上到下顺序执行</p>
+</li>
+<li><p>#表示注释</p>
+</li>
+<li><p>每一个指令都会创建提交一个新的镜像层，并提交。</p>
+</li>
+</ol>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/dockerFile08.jpg" srcset="/img/loading.gif" alt></p>
+<p>dockerfile是面向开发的，我们以后要发布项目，做镜像，就需要编写dockerfile文件，这个文件十分简单！</p>
+<p>DockerFile:  构建文件，定义了一切的步骤，</p>
+<p>DockerImages：通过DockeFile构建生成的镜像，最终发布和运行的产品，原来是jar,war</p>
+<p>Docker容器：是DockerImages运行起来，提供的服务。</p>
+<p>string set list hash sorted_set</p>
+<h2 id="DockerFile指令"><a href="#DockerFile指令" class="headerlink" title="DockerFile指令"></a>DockerFile指令</h2><p>通过这些指令，自己写一个镜像</p>
+<div class="note note-primary">
+            <p><code>FROM</code>:     基础镜像，一切从这里开始构建</p><p><code>MAINTAINER</code>:     指定维护者信息</p><p><code>RUN</code>:    镜像构建时需要运行的命令</p><p><code>ADD</code>:    添加内容</p><p><code>WORKDIR</code>:     镜像的工作目录</p><p><code>VOLUME</code>:     挂载的目录</p><p><code>EXPOSE</code>：爆漏端口配置    </p><p><code>CMD</code> :    指定容器启动的时候要运行的命令,只有最后一个会生效，而且可以被替代</p><p><code>ENTRYPOINT</code> :     指定容器启动的时候要运行的命令,可以追加命令</p><p><code>COPY</code> :    类似ADD，将我们文件拷贝到镜像中</p><p><code>ENV</code>： 构建时设置环境变量    </p>
+          </div>
+
+
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/dockerFile09%20%281%29.jpg" srcset="/img/loading.gif" alt></p>
+<h1 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h1>
             </article>
             <hr>
             <div>
