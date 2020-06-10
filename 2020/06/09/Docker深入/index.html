@@ -176,7 +176,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1k 字
+      1.2k 字
     </span>
   
 
@@ -186,7 +186,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      12
+      14
        分钟
     </span>
   
@@ -226,7 +226,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月9日 晚上
+                  本文最后更新于：2020年6月10日 早上
                 
               </p>
             
@@ -347,6 +347,29 @@ CMD /bin/bash</code></pre></div>
 <p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E6%9F%A5%E7%9C%8B%E6%8C%82%E8%BD%BD%E7%9A%84%E9%95%9C%E5%83%8F.jpg" srcset="/img/loading.gif" alt></p>
 <p><strong>在容器中挂载的目录下，新建个文件，测试对应的外部下是否同步了这个文件</strong></p>
 <p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker00.jpg" srcset="/img/loading.gif" alt></p>
+<h3 id="5、数据卷容器"><a href="#5、数据卷容器" class="headerlink" title="5、数据卷容器"></a>5、数据卷容器</h3><div class="note note-primary">
+            <p>数据卷容器就是个用来给其它容器同步数据的容器，其它容器的文件挂载到这个数据卷容器上，也就是父容器上。</p>
+          </div>
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker04.jpg" srcset="/img/loading.gif" alt></p>
+<p><strong>启动3个容器测试，通过我们刚才自己编写的镜像</strong></p>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ ~]# docker run -it --name docker01 6661964acee0</code></pre></div>
+
+
+
+<p><strong>将docker02和docker01通过 –volumes-from同步</strong></p>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ ~]# docker run -it --name docker02 --volumes-from docker01 6661964acee0</code></pre></div>
+
+<p><strong>在docker01的volume01中新建一个文件，查看dokcer02中是否存在</strong></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker05.jpg" srcset="/img/loading.gif" alt></p>
+<p><strong>再启动一个docker03和docke01同步，并在docke03中创建文件查看docker01中是否存</strong></p>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ ~]# docker run -it --name docker03 --volumes-from docker01 6661964acee0</code></pre></div>
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker06.jpg" srcset="/img/loading.gif" alt></p>
+<div class="note note-primary">
+            <p><strong>结论：</strong></p><p>容器之间配置信息的传递，数据卷容器的生命周期一直持续到没有容器使用为止。但是一旦持久化到本地，那么本地的数据不会删除。</p>
+          </div>
+
 <h1 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h1><h1 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h1>
             </article>
             <hr>
