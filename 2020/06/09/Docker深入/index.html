@@ -176,7 +176,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.6k 字
+      4k 字
     </span>
   
 
@@ -186,7 +186,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      19
+      56
        分钟
     </span>
   
@@ -226,7 +226,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月10日 下午
+                  本文最后更新于：2020年6月11日 晚上
                 
               </p>
             
@@ -366,13 +366,29 @@ CMD /bin/bash</code></pre></div>
 <div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ ~]# docker run -it --name docker03 --volumes-from docker01 6661964acee0</code></pre></div>
 
 <p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker06.jpg" srcset="/img/loading.gif" alt></p>
-<div class="note note-primary">
-            <p><strong>结论：</strong></p><p>容器之间配置信息的传递，数据卷容器的生命周期一直持续到没有容器使用为止。但是一旦持久化到本地，那么本地的数据不会删除。</p>
-          </div>
+{% note primary %}
 
-<h1 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h1><div class="note note-primary">
-            <p><strong>dockerfile是用来构建docker镜像的文件！命令参数脚本</strong></p><p>构建步骤：</p><p>1、编写一个dockerfile文件</p><p>2、docker build 构建成为一个镜像</p><p>3、docker run 运行镜像</p><p>4、docker push 发布镜像（DockerHub、阿里云镜像仓库）</p>
-          </div>
+**结论：**
+
+容器之间配置信息的传递，数据卷容器的生命周期一直持续到没有容器使用为止。但是一旦持久化到本地，那么本地的数据不会删除。
+
+{% endnote %}
+
+<h1 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h1>{% note primary %}
+
+**dockerfile是用来构建docker镜像的文件！命令参数脚本**
+
+构建步骤：
+
+1、编写一个dockerfile文件
+
+2、docker build 构建成为一个镜像
+
+3、docker run 运行镜像
+
+4、docker push 发布镜像（DockerHub、阿里云镜像仓库）
+
+{% endnote %}
 
 
 
@@ -395,16 +411,436 @@ CMD /bin/bash</code></pre></div>
 <p>DockerFile:  构建文件，定义了一切的步骤，</p>
 <p>DockerImages：通过DockeFile构建生成的镜像，最终发布和运行的产品，原来是jar,war</p>
 <p>Docker容器：是DockerImages运行起来，提供的服务。</p>
-<p>string set list hash sorted_set</p>
 <h2 id="DockerFile指令"><a href="#DockerFile指令" class="headerlink" title="DockerFile指令"></a>DockerFile指令</h2><p>通过这些指令，自己写一个镜像</p>
-<div class="note note-primary">
-            <p><code>FROM</code>:     基础镜像，一切从这里开始构建</p><p><code>MAINTAINER</code>:     指定维护者信息</p><p><code>RUN</code>:    镜像构建时需要运行的命令</p><p><code>ADD</code>:    添加内容</p><p><code>WORKDIR</code>:     镜像的工作目录</p><p><code>VOLUME</code>:     挂载的目录</p><p><code>EXPOSE</code>：爆漏端口配置    </p><p><code>CMD</code> :    指定容器启动的时候要运行的命令,只有最后一个会生效，而且可以被替代</p><p><code>ENTRYPOINT</code> :     指定容器启动的时候要运行的命令,可以追加命令</p><p><code>COPY</code> :    类似ADD，将我们文件拷贝到镜像中</p><p><code>ENV</code>： 构建时设置环境变量    </p>
-          </div>
+{% note primary %}
+
+`FROM`: 	基础镜像，一切从这里开始构建
+
+`MAINTAINER`: 	指定维护者信息
+
+`RUN`:	镜像构建时需要运行的命令
+
+`ADD`:	添加内容
+
+`WORKDIR`: 	镜像的工作目录
+
+`VOLUME`:	 挂载的目录
+
+`EXPOSE`：爆漏端口配置	
+
+`CMD` :	指定容器启动的时候要运行的命令,只有最后一个会生效，而且可以被替代
+
+`ENTRYPOINT` : 	指定容器启动的时候要运行的命令,可以追加命令
+
+`COPY` :	类似ADD，将我们文件拷贝到镜像中
+
+`ENV`： 构建时设置环境变量	
+
+{% endnote %}
 
 
 
 <p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/dockerFile09%20%281%29.jpg" srcset="/img/loading.gif" alt></p>
-<h1 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h1>
+<h2 id="实战测试"><a href="#实战测试" class="headerlink" title="实战测试"></a>实战测试</h2>{% note primary %}
+
+Docker Hub中 99%镜像都是这个基础镜像过来的 `FROM scratch`
+
+{% endnote %}
+
+<ul>
+<li>编写dockerfile的文件</li>
+</ul>
+<div class="hljs"><pre><code class="hljs shell">FROM centos
+MAINTAINER wangyang&lt;975594867@qq.com&gt;
+
+ENV MYPATH /usr/local
+WORKDIR $MYPATH
+
+
+RUN yum -y install vim
+RUN yum -y install net-tools
+
+EXPOSE 80
+
+
+CMD echo $MYPATH
+CMD echo "---end---"
+CMD /bin/bash</code></pre></div>
+
+<ul>
+<li>通过dockerfile文件构建对象(可能下载安装vim 会失败，可以直接注释掉)</li>
+</ul>
+<div class="note note-primary">
+            <p><code>命令 docker build -f dockerfile文件名 -t  镜像名:[tag]   .</code></p>
+          </div>
+
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ dockerfile]# docker build -f mydockerfile-centos -t mycentos:0.1 .</code></pre></div>
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docekr10.jpg" srcset="/img/loading.gif" alt></p>
+<ul>
+<li>启动 测试下（我们设置了WORKDIR 进来就在我们指定的工作目录下）</li>
+</ul>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker11.jpg" srcset="/img/loading.gif" alt></p>
+<ul>
+<li>可以通过 <code>docker history 镜像id</code>  来查看镜像的构建过程</li>
+</ul>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker12.jpg" srcset="/img/loading.gif" alt></p>
+{% note primary %}
+
+`CMD`和`ENTRYPOINT`的区别
+
+CMD 最后的命令只能替换entrypoint 可以在命令后面追加参数
+
+{% endnote %}
+
+<ul>
+<li>测试CMD</li>
+</ul>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ dockerfile]# vim dockerfile-test-cmd
+[root@iZbp1baf0xyn152a53kixrZ dockerfile]# cat dockerfile-test-cmd 
+FROM centos
+
+CMD ["ls","-a"]
+
+[root@iZbp1baf0xyn152a53kixrZ dockerfile]# docker build -f dockerfile-test-cmd -t test-cmd .
+Sending build context to Docker daemon  3.072kB
+Step 1/2 : FROM centos
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 470671670cac</span>
+Step 2/2 : CMD ["ls","-a"]
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Running <span class="hljs-keyword">in</span> f33a79b32463</span>
+Removing intermediate container f33a79b32463
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> e5087b9ba8b4</span>
+Successfully built e5087b9ba8b4
+Successfully tagged test-cmd:latest
+
+<span class="hljs-meta">#</span><span class="bash"> 启动镜像 成功后 cmd命令执行了</span>
+[root@iZbp1baf0xyn152a53kixrZ dockerfile]# docker run -it e5087b9ba8b4
+.   .dockerenv	dev  home  lib64       media  opt   root  sbin	sys  usr
+..  bin		etc  lib   lost+found  mnt    proc  run   srv	tmp  var
+
+
+<span class="hljs-meta">#</span><span class="bash"> 追加命令 报错</span>
+[root@iZbp1baf0xyn152a53kixrZ dockerfile]# docker run -it e5087b9ba8b4 -l
+docker: Error response from daemon: OCI runtime create failed: container_linux.go:345: starting container process caused "exec: \"-l\": executable file not found in $PATH": unknown.</code></pre></div>
+
+<ul>
+<li>测试 ENTRYPOINT</li>
+</ul>
+<div class="hljs"><pre><code class="hljs shell">创建dockerfile文件
+[root@iZbp1baf0xyn152a53kixrZ dockerfile]# vim dockerfile-test-entryinport
+[root@iZbp1baf0xyn152a53kixrZ dockerfile]# cat dockerfile-test-entryinport 
+FROM centos
+
+ENTRYPOINT ["ls","-a"]
+
+
+<span class="hljs-meta">#</span><span class="bash"> 构建镜像</span>
+[root@iZbp1baf0xyn152a53kixrZ dockerfile]# docker build -f dockerfile-test-entryinport -t test-entryinport .
+Sending build context to Docker daemon  4.096kB
+Step 1/2 : FROM centos
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 470671670cac</span>
+Step 2/2 : ENTRYPOINT ["ls","-a"]
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Running <span class="hljs-keyword">in</span> 96f23afcc451</span>
+Removing intermediate container 96f23afcc451
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 1144a7b9bae1</span>
+Successfully built 1144a7b9bae1
+Successfully tagged test-entryinport:latest
+
+<span class="hljs-meta">#</span><span class="bash"> 通过镜像启动，测试命令，这里和cmd一样的结果</span>
+[root@iZbp1baf0xyn152a53kixrZ dockerfile]# docker run -it 1144a7b9bae1
+.   .dockerenv	dev  home  lib64       media  opt   root  sbin	sys  usr
+..  bin		etc  lib   lost+found  mnt    proc  run   srv	tmp  var
+<span class="hljs-meta">#</span><span class="bash"> 测试追加命令，entrypoint 可以追加参数</span>
+[root@iZbp1baf0xyn152a53kixrZ dockerfile]# docker run -it 1144a7b9bae1 -l
+total 0
+drwxr-xr-x   1 root root   6 Jun 10 10:46 .
+drwxr-xr-x   1 root root   6 Jun 10 10:46 ..
+-rwxr-xr-x   1 root root   0 Jun 10 10:46 .dockerenv
+lrwxrwxrwx   1 root root   7 May 11  2019 bin -&gt; usr/bin
+drwxr-xr-x   5 root root 360 Jun 10 10:46 dev
+drwxr-xr-x   1 root root  66 Jun 10 10:46 etc
+drwxr-xr-x   2 root root   6 May 11  2019 home
+lrwxrwxrwx   1 root root   7 May 11  2019 lib -&gt; usr/lib
+lrwxrwxrwx   1 root root   9 May 11  2019 lib64 -&gt; usr/lib64
+drwx------   2 root root   6 Jan 13 21:48 lost+found
+drwxr-xr-x   2 root root   6 May 11  2019 media
+drwxr-xr-x   2 root root   6 May 11  2019 mnt
+drwxr-xr-x   2 root root   6 May 11  2019 opt
+dr-xr-xr-x 136 root root   0 Jun 10 10:46 proc
+dr-xr-x---   2 root root 162 Jan 13 21:49 root
+drwxr-xr-x  11 root root 163 Jan 13 21:49 run
+lrwxrwxrwx   1 root root   8 May 11  2019 sbin -&gt; usr/sbin
+drwxr-xr-x   2 root root   6 May 11  2019 srv
+dr-xr-xr-x  13 root root   0 Jun 10 10:46 sys
+drwxrwxrwt   7 root root 145 Jan 13 21:49 tmp
+drwxr-xr-x  12 root root 144 Jan 13 21:49 usr
+drwxr-xr-x  20 root root 262 Jan 13 21:49 var</code></pre></div>
+
+<h2 id="实战-：Tomcat镜像"><a href="#实战-：Tomcat镜像" class="headerlink" title="实战 ：Tomcat镜像"></a>实战 ：Tomcat镜像</h2><ul>
+<li>准备镜像文件tomcat 压缩包，jdk压缩包！</li>
+</ul>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker13.jpg" srcset="/img/loading.gif" alt></p>
+<ul>
+<li>编写dockerfile文件，官方命令 <code>Dockerfile</code></li>
+</ul>
+<h2 id="发布自己的镜像"><a href="#发布自己的镜像" class="headerlink" title="发布自己的镜像"></a>发布自己的镜像</h2><div class="note note-primary">
+            <p>发布镜像到DockerHub</p>
+          </div>
+
+<p>1、<a href="https://hub.docker.com注册自己的账号！" target="_blank" rel="noopener">https://hub.docker.com注册自己的账号！</a></p>
+<p>2、在我们的服务器上提交这个镜像</p>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ buildTomcatImage]# docker login --help
+
+Usage:	docker login [OPTIONS] [SERVER]
+
+Log in to a Docker registry.
+If no server is specified, the default is defined by the daemon.
+
+Options:
+  -p, --password string   Password
+      --password-stdin    Take the password from stdin
+  -u, --username string   Username</code></pre></div>
+
+<p>3、登录上 之后就可以提交镜像了，就是一步 docker push</p>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ buildTomcatImage]# docker login -u wangyang22
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded</code></pre></div>
+
+<p>4、 提交镜像，带着版本号</p>
+<p>docker tag 镜像id 镜像名:版本号</p>
+<p><code>由于网络原因，可能会被拒绝</code></p>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ buildTomcatImage]# docker push wangyang/centos:1.0
+The push refers to repository [docker.io/wangyang/centos]
+0683de282177: Preparing 
+denied: requested access to the resource is denied</code></pre></div>
+
+
+
+
+
+<div class="note note-primary">
+            <p>发布镜像到阿里云镜像服务</p>
+          </div>
+
+<p>1 .登录阿里云</p>
+<p>2.找到容器镜像服务</p>
+<p>3、创建命名空间</p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker14.jpg" srcset="/img/loading.gif" alt></p>
+<p>4、创建容器镜像</p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker15.jpg" srcset="/img/loading.gif" alt></p>
+<p>具体的操作参考阿里云</p>
+<img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker16.jpg" srcset="/img/loading.gif" style="zoom:150%;">
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/docker17.jpg" srcset="/img/loading.gif" alt></p>
+<h1 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h1><h2 id="理解Docker0"><a href="#理解Docker0" class="headerlink" title="理解Docker0"></a>理解Docker0</h2><div class="note note-primary">
+            <p><code>ip addr</code>查看网络连接信息</p>
+          </div>
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/ip-addr.jpg" srcset="/img/loading.gif" alt></p>
+<p><strong>docker是如何处理容器网络访问的</strong></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E5%AE%B9%E5%99%A8%E9%97%B4%E6%80%8E%E4%B9%88%E9%80%9A%E4%BF%A1.jpg" srcset="/img/loading.gif" alt></p>
+<ul>
+<li>启动一个tomcat容器</li>
+</ul>
+<div class="hljs"><pre><code class="hljs shell">docker run -d -P --name tomcat01 tomcat</code></pre></div>
+
+
+
+{% note primary %}
+
+查看容器内部网络地址，发现容器启动时都会得到一个eth0@if65 ip地址，docker分配的
+
+{% endnote %}
+
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ ~]# docker exec tomcat01 ip addr
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+64: eth0@if65: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+<span class="hljs-meta">#</span><span class="bash"> 在宿主机上ping 一下这个容器，发现也是可以ping 通的</span>
+[root@iZbp1baf0xyn152a53kixrZ ~]# ping 172.17.0.2
+PING 172.17.0.2 (172.17.0.2) 56(84) bytes of data.
+64 bytes from 172.17.0.2: icmp_seq=1 ttl=64 time=0.086 ms
+64 bytes from 172.17.0.2: icmp_seq=2 ttl=64 time=0.071 ms
+64 bytes from 172.17.0.2: icmp_seq=3 ttl=64 time=0.070 ms
+64 bytes from 172.17.0.2: icmp_seq=4 ttl=64 time=0.061 ms
+64 bytes from 172.17.0.2: icmp_seq=5 ttl=64 time=0.066 ms
+64 bytes from 172.17.0.2: icmp_seq=6 ttl=64 time=0.061 ms
+64 bytes from 172.17.0.2: icmp_seq=7 ttl=64 time=0.068 ms</code></pre></div>
+
+
+
+<div class="note note-primary">
+            <p>原理：只要安装了docker,就会有一个docker0网卡，我们每启动一个docker容器，docker就会给docker容器分配一个ip。</p><p>桥接模式，使用的是veth-pair技术</p>
+          </div>
+
+<ul>
+<li>再次测试 ip addr 发现多了一个ip</li>
+</ul>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/veth-pair01.jpg" srcset="/img/loading.gif" alt></p>
+<ul>
+<li>再启动一个docker,发现又多了ip</li>
+</ul>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/veth-pair02.jpg" srcset="/img/loading.gif" alt></p>
+<p><code>发现这些容器的网卡，都是一对一对的，这就veth-pair 一对虚拟的设备接口，都是成对出现的，一端连着协议，一端彼此相连。利用这个特性，连接各种虚拟网络设备</code></p>
+<ul>
+<li>测试Tomcat01 和tomcat02是否可以ping通</li>
+</ul>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E6%A1%A5%E6%8E%A5%E7%BD%91%E5%8D%A1.jpg" srcset="/img/loading.gif" alt></p>
+<p><code>容器和容器之间是可以ping通的，tomcat01 和tomcat02是公用的一个路由器也就是docker0。所有的容器不指定网络的情况下，默认都是docker0路由的，docker0会给每一容器分配一个可以用的ip</code></p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p>docker 使用的是linux的桥接，宿主机中是一个Docker容器的网桥docker0</p>
+<p>Docker 中所有的网络接口都是虚拟的。虚拟的转发效率高。只要容器删除，对应的一对veth-pair就会删除。</p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E7%BD%91%E6%A1%A5.jpg" srcset="/img/loading.gif" alt></p>
+<h2 id="–link"><a href="#–link" class="headerlink" title="–link"></a>–link</h2><p>思考一个场景，编写一个微服务，database url=ip; 项目不重启，数据库ip换了，我们希望可以通过名字来访问容器。</p>
+<div class="hljs"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 通过容器名来访问</span>
+[root@iZbp1baf0xyn152a53kixrZ ~]# docker exec -it tomcat02 ping tomcat01
+ping: tomcat01: Temporary failure in name resolution
+
+
+<span class="hljs-meta">#</span><span class="bash"> 解决不能通过容器名访问另一个容器的问题 --link</span>
+[root@iZbp1baf0xyn152a53kixrZ ~]# docker run -d -P --name tomcat04 --link tomcat01 tomcat
+1320f2f4135933df7e11b8f8d3e8e8db10eab6959c65c2585cd24a1e1e4d2cb2
+[root@iZbp1baf0xyn152a53kixrZ ~]# docker exec -it tomcat04 ping tomcat01
+PING tomcat01 (172.17.0.2) 56(84) bytes of data.
+64 bytes from tomcat01 (172.17.0.2): icmp_seq=1 ttl=64 time=0.153 ms
+64 bytes from tomcat01 (172.17.0.2): icmp_seq=2 ttl=64 time=0.089 ms
+64 bytes from tomcat01 (172.17.0.2): icmp_seq=3 ttl=64 time=0.103 ms
+64 bytes from tomcat01 (172.17.0.2): icmp_seq=4 ttl=64 time=0.086 ms
+
+
+<span class="hljs-meta">#</span><span class="bash"> 反向连接不可以ping通</span>
+[root@iZbp1baf0xyn152a53kixrZ ~]# docker exec -it tomcat01 ping tomcat04
+ping: tomcat04: Temporary failure in name resolution</code></pre></div>
+
+<p>其实 就是 tomcat03在本地配置了tomcat02</p>
+<p><strong>本质</strong>：–link就是在hosts配置中增加了一个172.17.0.3    tomcat02 f02eeee4ac8a</p>
+<p>现在玩Docker已经<code>不建议使用 --link了！</code></p>
+<p>docker0 不支持容器名访问</p>
+<h2 id="自定义网络"><a href="#自定义网络" class="headerlink" title="自定义网络"></a>自定义网络</h2><div class="note note-primary">
+            <p>查看网卡信息 <code>docker network ls</code></p>
+          </div>
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/network.jpg" srcset="/img/loading.gif" alt></p>
+<p><strong>网络模式</strong></p>
+<p>bridge :  桥接模式（默认）</p>
+<p>host： 和主机共享网络</p>
+<p>none:  不配置网络</p>
+<p><strong>测试</strong></p>
+<blockquote>
+<p>之前我们直接启动一个容器默认是带着 <code>--net bridge</code></p>
+<p>docker run -d -P –name tomcat01 –net bridge tomcat </p>
+<p>​                                        ||</p>
+<p>docker run -d -P –name tomcat01 tomcat</p>
+<p>docker0 特点： 是默认的，容器名不访问 ，可以使用–link 连同</p>
+</blockquote>
+<ul>
+<li>创建自定义的网络</li>
+</ul>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ ~]# docker network create -d bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 mynet
+077ded555eba6506432dfcfd57db1c59e91ff792294702a7d8a6ad3c82d531af
+[root@iZbp1baf0xyn152a53kixrZ ~]# docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+abe6f173e521        bridge              bridge              local
+45464866e7ab        host                host                local
+077ded555eba        mynet               bridge              local
+5e194fec7f08        none                null                local</code></pre></div>
+
+<p><strong>我们自己创建的网络</strong></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/mynet.jpg" srcset="/img/loading.gif" alt></p>
+<p>使用自动以的网络启动两个容器</p>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ ~]# docker run -d -P --name tomcat-net-01 --net mynet tomcat
+
+[root@iZbp1baf0xyn152a53kixrZ ~]# docker run -d -P --name tomcat-net-02 --net mynet tomcat</code></pre></div>
+
+<p><strong>查看自定义网卡下的详细信息</strong></p>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ ~]# docker network inspect mynet
+[
+    &#123;
+        "Name": "mynet",
+        "Id": "077ded555eba6506432dfcfd57db1c59e91ff792294702a7d8a6ad3c82d531af",
+        "Created": "2020-06-11T14:27:09.90550936+08:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": &#123;
+            "Driver": "default",
+            "Options": &#123;&#125;,
+            "Config": [
+                &#123;
+                    "Subnet": "192.168.0.0/16",
+                    "Gateway": "192.168.0.1"
+                &#125;
+            ]
+        &#125;,
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": &#123;
+            "Network": ""
+        &#125;,
+        "ConfigOnly": false,
+        "Containers": &#123;
+            "3bb5cbb40854c9a9741de337607481400d6b4e36afc7495f8ad8be453904933b": &#123;
+                "Name": "tomcat-net-02",
+                "EndpointID": "9772aff8ea85e9c698bacc1941dd49bbf8af23c266131b8d46e09d34957c6692",
+                "MacAddress": "02:42:c0:a8:00:03",
+                "IPv4Address": "192.168.0.3/16",
+                "IPv6Address": ""
+            &#125;,
+            "4515121b30deb6836e85a9de3be8549c2466e8f7d1443e4c7ee239bd63fcdd55": &#123;
+                "Name": "tomcat-net-01",
+                "EndpointID": "469f2163f5d81a113114599b936407f71ee6681880ef9934d33871ac3c5c57e3",
+                "MacAddress": "02:42:c0:a8:00:02",
+                "IPv4Address": "192.168.0.2/16",
+                "IPv6Address": ""
+            &#125;
+        &#125;,
+        "Options": &#123;&#125;,
+        "Labels": &#123;&#125;
+    &#125;
+]</code></pre></div>
+
+
+
+
+
+<p><strong>使用自定义的网络可以容器名ping通</strong></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BD%91%E7%BB%9C%E5%8F%AF%E4%BB%A5%E5%AE%B9%E5%99%A8%E5%90%8Dping.jpg" srcset="/img/loading.gif" alt></p>
+<h2 id="网络联通"><a href="#网络联通" class="headerlink" title="网络联通"></a>网络联通</h2><div class="note note-primary">
+            <p>不在同一个网络段的容器不能之间联通，必须使用 <code>docker network connect</code> 将他们联通</p>
+          </div>
+
+
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E5%90%91%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E7%AB%AF%E7%9A%84%E8%BF%9E%E6%8E%A5.jpg" srcset="/img/loading.gif" alt></p>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/%E8%BF%9E%E5%90%8C%E7%BD%91%E5%8D%A1%E5%92%8C%E5%AE%B9%E5%99%A8.jpg" srcset="/img/loading.gif" alt></p>
+<p><strong>测试打通mynet 到 tomcat01</strong></p>
+<div class="hljs"><pre><code class="hljs shell">[root@iZbp1baf0xyn152a53kixrZ ~]# docker network connect mynet tomcat01</code></pre></div>
+
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/network%20connect%20ping%20%E9%80%9A%E4%BA%86%E5%AE%B9%E5%99%A8%E5%92%8Cmynet.jpg" srcset="/img/loading.gif" alt></p>
+<blockquote>
+<p>连通之后查看发现，直接是将tomcat01放到mynet下</p>
+<p>一个容器两个ip,就好比阿里云的 公网ip 和内网ip</p>
+</blockquote>
+<p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/tomat01%E6%94%BE%E5%88%B0mynet%E4%B8%8B.jpg" srcset="/img/loading.gif" alt></p>
+<h2 id="实战部署redis集群"><a href="#实战部署redis集群" class="headerlink" title="实战部署redis集群"></a>实战部署redis集群</h2><p><img src="https://www.qfeng.online/imgs/docker/docker-leaning/redis%E9%9B%86%E7%BE%A4.jpg" srcset="/img/loading.gif" alt></p>
+<h2 id="Spring-Boot-打包成Docker-镜像"><a href="#Spring-Boot-打包成Docker-镜像" class="headerlink" title="Spring Boot 打包成Docker 镜像"></a>Spring Boot 打包成Docker 镜像</h2><ol>
+<li>创建springboot 应用</li>
+<li>打包springboot</li>
+<li>编写Dockerfile</li>
+<li>上传大好的jar包和Dockerfile</li>
+<li>构建docker镜像</li>
+<li>发送到仓库</li>
+</ol>
+
             </article>
             <hr>
             <div>
