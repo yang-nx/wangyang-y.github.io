@@ -19,10 +19,19 @@
   <meta name="description" content="愿君安好 愿君越来越好">
   <meta name="author" content="wang-yang">
   <meta name="keywords" content="wangyang">
-  <title>归档 - 小楼昨夜又秋风</title>
+  <title>RabbitMQ基础 - 小楼昨夜又秋风</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dracula.min.css" />
+  
+
+  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -43,7 +52,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -153,6 +162,48 @@
             </span>
 
             
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-12 08:39">
+      2020年6月12日 早上
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      688 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
           </div>
 
           
@@ -163,61 +214,201 @@
 
   <main>
     
-      <div class="container nopadding-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 7 篇文章</p>
-  <hr>
-  
-    
       
-      <p class="h5">2020</p>
-    
-    <a href="/2020/06/12/RabbitMQ%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E2%80%94%E2%80%94%E7%AE%80%E5%8D%95%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">RabbitMQ工作模式——简单工作模式</span>
-      <span style="float: right;">06-12</span>
-    </a>
-  
-    
-    <a href="/2020/06/12/RabbitMQ%E5%9F%BA%E7%A1%80/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">RabbitMQ基础</span>
-      <span style="float: right;">06-12</span>
-    </a>
-  
-    
-    <a href="/2020/06/09/Docker%E6%B7%B1%E5%85%A5/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Docker深入</span>
-      <span style="float: right;">06-09</span>
-    </a>
-  
-    
-    <a href="/2020/06/07/Docker%E5%9F%BA%E7%A1%80/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Docker基础</span>
-      <span style="float: right;">06-07</span>
-    </a>
-  
-    
-    <a href="/2020/06/04/Spring-Boot%E5%AE%8C%E6%95%B4%E7%AC%94%E8%AE%B0/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Spring Boot完整笔记</span>
-      <span style="float: right;">06-04</span>
-    </a>
-  
-</div>
 
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2020年6月12日 晚上
+                
+              </p>
+            
+            <article class="markdown-body">
+              <h1 id="RabbitMQ的基本概念"><a href="#RabbitMQ的基本概念" class="headerlink" title="RabbitMQ的基本概念"></a>RabbitMQ的基本概念</h1><h2 id="1-1-MQ概述"><a href="#1-1-MQ概述" class="headerlink" title="1.1 MQ概述"></a>1.1 MQ概述</h2><p>MQ全称Message Queue (消息队列)，是在消息的传输过程中<code>保存消息的容器</code>。多用于分布式系统之间进行通信。</p>
+<div class="note note-primary">
+            <p>分布式系统中通信两种方式：直接远程调用和借助 第三方完成间接通信</p>
+          </div>
+
+<p><img src="/2020/06/12/RabbitMQ%E5%9F%BA%E7%A1%80/C:%5CUsers%5Cwangy%5CDesktop%5Cmq%E6%A6%82%E5%BF%B5.jpg" srcset="/img/loading.gif" alt></p>
+<h2 id="1-2-MQ的优劣势（理解）"><a href="#1-2-MQ的优劣势（理解）" class="headerlink" title="1.2 MQ的优劣势（理解）"></a>1.2 MQ的优劣势（理解）</h2><p><strong>MQ的优势</strong></p>
+<ul>
+<li>应用解耦： 提高系统容错性和可维护性</li>
+<li>异步提速：提升用户体验和系统的吞吐量</li>
+<li>削峰填谷：提高系统稳定性</li>
+</ul>
+<p><strong>MQ的劣势</strong></p>
+<ul>
+<li><p>系统的可用性降低</p>
+<p>系统引入的外部依赖越多，系统的稳定性就越差。要保证每一部分都是完好的。一旦MQ宕机，就会对业务造成影响。就要考虑保证MQ的高可用？</p>
+</li>
+<li><p>系统的复杂性提高</p>
+<p>要保证消息没有被重复消费？处理消息丢失情况？保证消息传递的顺序行？</p>
+</li>
+<li><p>一致性问题</p>
+<p>A系统处理完业务，通过 MQ 给 B 、 C 、 D 三个系统发消息数据，如果 B 系统、 C 系统处理成功， D 系统处理失败。如何保证消息数据处理的一性？</p>
+</li>
+</ul>
+<h2 id="1-3常见的MQ产品（了解）"><a href="#1-3常见的MQ产品（了解）" class="headerlink" title="1.3常见的MQ产品（了解）"></a>1.3常见的MQ产品（了解）</h2><p><img src="/2020/06/12/RabbitMQ%E5%9F%BA%E7%A1%80/C:%5CUsers%5Cwangy%5CDesktop%5C%E5%B8%B8%E8%A7%81MQ.jpg" srcset="/img/loading.gif" alt></p>
+<h2 id="1-4-RabbitMQ简介"><a href="#1-4-RabbitMQ简介" class="headerlink" title="1.4 RabbitMQ简介"></a>1.4 RabbitMQ简介</h2><p><strong>小结</strong></p>
+<blockquote>
+<p>1、 RabbitMQ是基于AMQP协议使用Erlang语言开发的一款消息队列</p>
+<p>2、RabbitMQ提供了6种工作模式</p>
+<p>3、AMQP是协议，类比HTTP</p>
+<p>4、JMS是API规范接口，类比JDBC</p>
+</blockquote>
+<h1 id="RabbitMQ的安装和配置"><a href="#RabbitMQ的安装和配置" class="headerlink" title="RabbitMQ的安装和配置"></a>RabbitMQ的安装和配置</h1><p>1、点击下载安装</p>
+<p>2、点击Docker 镜像</p>
+<p>3、找到最新的带界面的安装</p>
+<p>二、拉取镜像<br>docker pull rabbitmq:3.8.0-management</p>
+<p>三、运行镜像  4b23cfb64730  （5672是程序的端口，15672是web访问的端口）<br>docker run -d –name my-rabbitmq-management -p 5672:5672 -p 15672:15672 –hostname my-rabbitmq 4b23cfb64730<br>四、防火墙打开15672端口<br>1、放开端口</p>
+<p>firewall-cmd –add-port=15672/tcp –permanent<br>2、重启防火墙</p>
+<p>firewall-cmd –reload<br>五、到阿里云的安全策略组，打开15672端口</p>
+<p>六、通过阿里云服务器的  ip:15672 就可以访问了！起始账号密码都是：guest</p>
+<p>七、出于安全考虑，请及时修改账号密码哦！<br>1、进入docker 的 RabbitMQ 容器中</p>
+<p>docker exec -it 647caf5c20c6 bash<br>2、查看用户</p>
+<p>rabbitmqctl list_users<br>3、修改密码</p>
+<p>rabbitmqctl change_password userName newPassword<br>4、如果不想要guest的账号也可以新增账号</p>
+<p> rabbitmqctl add_user userName newPassword<br>5、看guest不爽，你还可以delete它</p>
+<p>rabbitmqctl delete_user guest<br>6、最后别忘了给自己添加的账号增加超级管理员权限</p>
+<p>rabbitmqctl set_user_tags userName administrator</p>
+<h1 id="RabbitMQ快速入门"><a href="#RabbitMQ快速入门" class="headerlink" title="RabbitMQ快速入门"></a>RabbitMQ快速入门</h1><h2 id="3-1-入门程序"><a href="#3-1-入门程序" class="headerlink" title="3.1 入门程序"></a>3.1 入门程序</h2><blockquote>
+<p>需求：使用简单模式完成消息传递</p>
+</blockquote>
+<h2 id="3-2-工作模式"><a href="#3-2-工作模式" class="headerlink" title="3.2 工作模式"></a>3.2 工作模式</h2><ul>
+<li>简单工作模式</li>
+</ul>
+<p>​    </p>
+<ul>
+<li>work Queues 工作模式</li>
+</ul>
+<div class="hljs"><pre><code>* Pub/Sub订阅模式</code></pre></div><ul>
+<li>Routing 路由模式</li>
+</ul>
+<ul>
+<li>Topics 通配符模式</li>
+</ul>
+<h1 id="Spring-整合-RabbitMQ"><a href="#Spring-整合-RabbitMQ" class="headerlink" title="Spring 整合 RabbitMQ"></a>Spring 整合 RabbitMQ</h1><ul>
+<li>生产者</li>
+</ul>
+<p>​    </p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/RabbitMQ/">RabbitMQ</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/learning-note/">learning note</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/12/RabbitMQ%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E2%80%94%E2%80%94%E7%AE%80%E5%8D%95%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">RabbitMQ工作模式——简单工作模式</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/09/Docker%E6%B7%B1%E5%85%A5/">
+                        <span class="hidden-mobile">Docker深入</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+  <script type="text/javascript">
+    var oldLoadVa = window.onload;
+    window.onload = function () {
+      oldLoadVa && oldLoadVa();
+
+      new Valine({
+        el: "#vcomments",
+        app_id: "DX9DnwxDPkNGy5RqXDMhTA7j-gzGzoHsz",
+        app_key: "WG6HcnSSHCnML90A8ODduwi1",
+        placeholder: "说点什么",
+        path: window.location.pathname,
+        avatar: "retro",
+        meta: ["nick","mail","link"],
+        pageSize: "10",
+        lang: "zh-CN",
+        highlight: false,
+        recordIP: false,
+        serverURLs: "",
+      });
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
 
 
               </div>
-            </div>
+            
           </div>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://octodex.github.com/images/jetpacktocat.png" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
+    </div>
+  </div>
+
+
     
   </main>
 
@@ -364,6 +555,31 @@
 
 
 
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
 
 
   <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
@@ -371,7 +587,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Archive&nbsp;",
+        "RabbitMQ基础&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
@@ -386,6 +602,21 @@
 
 
 
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
 
 
   <script  src="/js/local-search.js" ></script>
@@ -399,6 +630,20 @@
   </script>
 
 
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
 
 
 
