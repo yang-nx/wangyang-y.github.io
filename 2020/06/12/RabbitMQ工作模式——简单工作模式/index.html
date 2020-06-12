@@ -176,7 +176,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1k 字
+      1.3k 字
     </span>
   
 
@@ -186,7 +186,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      15
+      20
        分钟
     </span>
   
@@ -232,7 +232,8 @@
             
             <article class="markdown-body">
               <p><img src="https://www.qfeng.online/imgs/RabbitMQ/rabbitmq%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg" srcset="/img/loading.gif" alt></p>
-<h1 id="RabbitMQ工作模式（一）HelloWorld"><a href="#RabbitMQ工作模式（一）HelloWorld" class="headerlink" title="RabbitMQ工作模式（一）HelloWorld"></a>RabbitMQ工作模式（一）HelloWorld</h1><div class="note note-primary">
+<h1 id="RabbitMQ工作模式（一）HelloWorld"><a href="#RabbitMQ工作模式（一）HelloWorld" class="headerlink" title="RabbitMQ工作模式（一）HelloWorld"></a>RabbitMQ工作模式（一）HelloWorld</h1><p><img src="https://www.qfeng.online/imgs/RabbitMQ/RabbitMQ%E7%AE%80%E5%8D%95%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F.jpg" srcset="/img/loading.gif" alt></p>
+<div class="note note-primary">
             <p>简单工作模式：生产者将消息发送到消息队列queue，消费者从该队列接受消息</p>
           </div>
 
@@ -367,7 +368,7 @@
     &#125;
 &#125;</code></pre></div>
 
-<p>小结：</p>
+<p><strong>小结：</strong></p>
 <ul>
 <li>创建Connection工厂  <code>ConnectionFactory  factory =  new ConnectionFactory( );</code></li>
 </ul>
@@ -388,9 +389,72 @@
 <p>Consumer消费者，从queue中拿出消息</p>
 </blockquote>
 <p>Rabbitmq_Consumer.java</p>
-<div class="hljs"><pre><code class="hljs java">
-</code></pre></div>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yang.consumer;
 
+<span class="hljs-keyword">import</span> com.rabbitmq.client.*;
+<span class="hljs-keyword">import</span> com.rabbitmq.client.impl.AMQImpl;
+
+<span class="hljs-keyword">import</span> java.io.IOException;
+<span class="hljs-keyword">import</span> java.util.concurrent.TimeoutException;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@author</span> WangYang</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/6/12 15:59</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Rabbitmq_Consumer</span> </span>&#123;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException, TimeoutException </span>&#123;
+        <span class="hljs-comment">//1.创建连接工厂</span>
+        ConnectionFactory factory = <span class="hljs-keyword">new</span> ConnectionFactory();
+        <span class="hljs-comment">//2.设置参数</span>
+        factory.setHost(<span class="hljs-string">"121.199.17.199"</span>);
+        factory.setPort(<span class="hljs-number">5672</span>);
+        factory.setVirtualHost(<span class="hljs-string">"/yang"</span>);  <span class="hljs-comment">//设置虚拟机，默认值是/</span>
+        factory.setUsername(<span class="hljs-string">"yang"</span>);
+        factory.setPassword(<span class="hljs-string">"yang"</span>);
+        <span class="hljs-comment">//创建connection</span>
+        Connection connection = factory.newConnection();
+
+        <span class="hljs-comment">//创建channel</span>
+        Channel channel = connection.createChannel();
+
+        <span class="hljs-comment">//获取queue</span>
+        channel.queueDeclare(<span class="hljs-string">"test-rabbitmq-provider"</span>, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">null</span>);
+        <span class="hljs-comment">/**</span>
+<span class="hljs-comment">         * queue： 队列名字</span>
+<span class="hljs-comment">         * autoAsk: 是否自动确认</span>
+<span class="hljs-comment">         *</span>
+<span class="hljs-comment">         */</span>
+        Consumer consumer = <span class="hljs-keyword">new</span> DefaultConsumer(channel)&#123;
+            <span class="hljs-comment">//回调方法，当确认收到消息后会自动执行该方法</span>
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleDelivery</span><span class="hljs-params">(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, <span class="hljs-keyword">byte</span>[] body)</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+                <span class="hljs-comment">/**</span>
+<span class="hljs-comment">                 * consumerTag 消息的标识</span>
+<span class="hljs-comment">                 * envelope 获取一些信息</span>
+<span class="hljs-comment">                 * properties 配置信息</span>
+<span class="hljs-comment">                 * body 具体信息</span>
+<span class="hljs-comment">                 */</span>
+                System.out.println(<span class="hljs-string">"consumerTag:"</span> + consumerTag);
+                System.out.println(<span class="hljs-string">"envelope:"</span> + envelope.getExchange());
+                System.out.println(<span class="hljs-string">"envelope:"</span> + envelope.getRoutingKey());
+                System.out.println(<span class="hljs-string">"properties:"</span> + properties);
+                System.out.println(<span class="hljs-string">"消息:"</span> + <span class="hljs-keyword">new</span> String(body));
+                System.out.println(<span class="hljs-string">"-----------------"</span>);
+
+            &#125;
+        &#125;;
+        <span class="hljs-comment">//消费消息</span>
+        channel.basicConsume(<span class="hljs-string">"test-rabbitmq-provider"</span>,<span class="hljs-keyword">true</span>,consumer);
+
+    &#125;
+&#125;</code></pre></div>
+
+<p><strong>小结</strong></p>
+<p>消费的方法调用基本和消息提供者的基本相似，注意当确认收到消息后要执行回调方法 <code>handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)</code></p>
+<p>消费消息</p>
+<p>channel.basicConsume(“queue名字”，autoAsk是否自动确认 ，consumer回调函数)</p>
 
             </article>
             <hr>
