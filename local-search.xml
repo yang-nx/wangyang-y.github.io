@@ -29,6 +29,31 @@
   
   
   <entry>
+    <title>SpringBoot整合RabbitMQ</title>
+    <link href="/2020/06/12/SpringBoot%E6%95%B4%E5%90%88RabbitMQ/"/>
+    <url>/2020/06/12/SpringBoot%E6%95%B4%E5%90%88RabbitMQ/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    <categories>
+      
+      <category>RabbitMQ</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>learning note</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>RabbitMQ基础</title>
     <link href="/2020/06/12/RabbitMQ%E5%9F%BA%E7%A1%80/"/>
     <url>/2020/06/12/RabbitMQ%E5%9F%BA%E7%A1%80/</url>
