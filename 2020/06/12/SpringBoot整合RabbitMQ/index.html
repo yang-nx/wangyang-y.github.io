@@ -176,7 +176,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      776 字
+      1.3k 字
     </span>
   
 
@@ -186,7 +186,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      13
+      22
        分钟
     </span>
   
@@ -235,7 +235,7 @@
             <p>创建两个springboot工程，一个充当消息的提供者provider,另一个监听消息消费消息consumer</p>
           </div>
 
-<h2 id="1-创建消费者Provider"><a href="#1-创建消费者Provider" class="headerlink" title="1. 创建消费者Provider"></a>1. 创建消费者Provider</h2><p><strong>1.1  创建SpringBoot的项目</strong></p>
+<h2 id="1-创建生产者Provider"><a href="#1-创建生产者Provider" class="headerlink" title="1. 创建生产者Provider"></a>1. 创建生产者Provider</h2><p><strong>1.1  创建SpringBoot的项目</strong></p>
 <p><strong>1.2 pom文件中导入spring-boot-starter-amqp启动器</strong></p>
 <div class="hljs"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--导入rabbitmq依赖--&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
@@ -366,6 +366,101 @@
 <p>绑定队列和交换机</p>
 <p> <code>BindingBuilder.bind(queue).to(exchange).with(&quot;boot.#&quot;).noargs();</code></p>
 </blockquote>
+<h2 id="2-创建消费者Consumer"><a href="#2-创建消费者Consumer" class="headerlink" title="2.创建消费者Consumer"></a>2.创建消费者Consumer</h2><p> <strong>1.1  创建SpringBoot的项目</strong></p>
+<p><strong>1.2 pom文件中导入spring-boot-starter-amqp启动器</strong></p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">project</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://maven.apache.org/POM/4.0.0"</span> <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span></span>
+<span class="hljs-tag">         <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">modelVersion</span>&gt;</span>4.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">modelVersion</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">parent</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.3.1.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">relativePath</span>/&gt;</span> <span class="hljs-comment">&lt;!-- lookup parent from repository --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">parent</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.yang<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>springboot-rabbitmq-consumer<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>springboot-rabbitmq-consumer<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">description</span>&gt;</span>Demo project for Spring Boot<span class="hljs-tag">&lt;/<span class="hljs-name">description</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">java.version</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">java.version</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">exclusions</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.junit.vintage<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>junit-vintage-engine<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">exclusions</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.amqp<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-rabbit-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span></code></pre></div>
+
+<p><strong>1.3 在application.yml中配置rabbitmq的基本属性</strong></p>
+<div class="hljs"><pre><code class="hljs yml"><span class="hljs-comment"># 配置rabbitmq的基本参数</span>
+<span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">rabbitmq:</span>
+    <span class="hljs-attr">host:</span> <span class="hljs-number">121.199</span><span class="hljs-number">.17</span><span class="hljs-number">.199</span>
+    <span class="hljs-attr">port:</span> <span class="hljs-number">5672</span>
+    <span class="hljs-attr">username:</span> <span class="hljs-string">yang</span>
+    <span class="hljs-attr">password:</span> <span class="hljs-string">yang</span>
+    <span class="hljs-attr">virtual-host:</span> <span class="hljs-string">/yang</span></code></pre></div>
+
+<p><strong>1.4 编写消息监听器</strong></p>
+<div class="note note-primary">
+            <p><code>@RabbitListener（queues=&quot;&quot;） 监听queue的方法</code></p><p><code>Message 包含了所有的信息包括队列信息，以及配置的属性，和消息体</code></p>
+          </div>
+
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yang.springbootrabbitmqconsumer.consumer;
+
+
+<span class="hljs-keyword">import</span> org.springframework.amqp.core.Message;
+<span class="hljs-keyword">import</span> org.springframework.amqp.rabbit.annotation.RabbitListener;
+<span class="hljs-keyword">import</span> org.springframework.stereotype.Component;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@author</span> WangYang</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/6/16 21:22</span>
+<span class="hljs-comment"> * 编写消息监听器</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyListener</span> </span>&#123;
+
+    <span class="hljs-meta">@RabbitListener</span>(queues = <span class="hljs-string">"springboot-rabbitmq-queue"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ListenerQueue</span><span class="hljs-params">(Message message)</span></span>&#123;
+        System.out.println(message);
+        System.out.println(<span class="hljs-keyword">new</span> String(message.getBody()));
+    &#125;
+&#125;</code></pre></div>
+
 
             </article>
             <hr>
@@ -396,9 +491,9 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/06/12/RabbitMQ%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E2%80%94%E2%80%94%E7%AE%80%E5%8D%95%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F/">
+                      <a href="/2020/06/12/SpringBoot%E6%95%B4%E5%90%88RabbitMQ(Provider)/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">RabbitMQ工作模式——简单工作模式</span>
+                        <span class="hidden-mobile">SpringBoot整合RabbitMQ</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -406,8 +501,8 @@
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/06/12/SpringBoot%E6%95%B4%E5%90%88RabbitMQ/">
-                        <span class="hidden-mobile">SpringBoot整合RabbitMQ</span>
+                      <a href="/2020/06/12/RabbitMQ%E5%9F%BA%E7%A1%80/">
+                        <span class="hidden-mobile">RabbitMQ基础</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
