@@ -19,19 +19,10 @@
   <meta name="description" content="愿君安好 愿君越来越好">
   <meta name="author" content="wang-yang">
   <meta name="keywords" content="wangyang">
-  <title>linux下安装jdk - 小楼昨夜又秋风</title>
+  <title>归档 - 小楼昨夜又秋风</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dracula.min.css" />
-  
-
-  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -52,7 +43,7 @@
 
 
 <body>
-  <header style="height: 70vh;">
+  <header style="height: 60vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -162,48 +153,6 @@
             </span>
 
             
-              
-  <div class="mt-3 post-meta">
-    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-05-20 11:06">
-      2020年5月20日 上午
-    </time>
-  </div>
-
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      444 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      7
-       分钟
-    </span>
-  
-
-  
-  
-    
-      <!-- 不蒜子统计文章PV -->
-      <span id="busuanzi_container_page_pv" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="busuanzi_value_page_pv"></span> 次
-      </span>
-    
-  
-</div>
-
-            
           </div>
 
           
@@ -214,181 +163,49 @@
 
   <main>
     
+      <div class="container nopadding-md">
+        <div class="py-5" id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<div class="list-group">
+  <p class="h4">共计 11 篇文章</p>
+  <hr>
+  
+    
       
+      <p class="h5">2020</p>
+    
+    <a href="/2020/05/20/linux%E5%AE%89%E8%A3%85jdk/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">linux下安装jdk</span>
+      <span style="float: right;">05-20</span>
+    </a>
+  
+</div>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <div class="post-content mx-auto" id="post">
-            
-              <p class="note note-info">
-                
-                  本文最后更新于：2020年6月20日 上午
-                
-              </p>
-            
-            <article class="markdown-body">
-              <h3 id="一、下载jdk"><a href="#一、下载jdk" class="headerlink" title="一、下载jdk"></a>一、下载jdk</h3><p>下载地址：<a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">Oracle官网</a></p>
-<p>选择下载tar包</p>
-<h3 id="二、卸载已有jdk"><a href="#二、卸载已有jdk" class="headerlink" title="二、卸载已有jdk"></a>二、卸载已有jdk</h3><p>1、查看已安装jdk <code>rpm -qa | grep java</code></p>
-<div class="hljs"><pre><code class="hljs shell">[root@slave1 sbin]# rpm -qa | grep java
-javapackages-tools-3.4.1-11.el7.noarch
-java-1.8.0-openjdk-1.8.0.242.b08-1.el7.x86_64
-tzdata-java-2019c-1.el7.noarch
-java-1.8.0-openjdk-headless-1.8.0.242.b08-1.el7.x86_64
-java-1.7.0-openjdk-1.7.0.251-2.6.21.1.el7.x86_64
-java-1.7.0-openjdk-headless-1.7.0.251-2.6.21.1.el7.x86_64
-python-javapackages-3.4.1-11.el7.noarch</code></pre></div>
-
-<p>2、卸载已有的jdk</p>
-<p><code>rpm -e --nodeps javapackages-tools-3.4.1-11.el7.noarch</code></p>
-<div class="hljs"><pre><code class="hljs shell">[root@slave1 sbin]# rpm -e --nodeps javapackages-tools-3.4.1-11.el7.noarch java-1.8.0-openjdk-1.8.0.242.b08-1.el7.x86_64 tzdata-java-2019c-1.el7.noarch java-1.8.0-openjdk-headless-1.8.0.242.b08-1.el7.x86_64 java-1.7.0-openjdk-1.7.0.251-2.6.21.1.el7.x86_64 java-1.7.0-openjdk-headless-1.7.0.251-2.6.21.1.el7.x86_64 python-javapackages-3.4.1-11.el7.noarch</code></pre></div>
-
-{% note primary %}
-
-**注意：** 如果使用rpm -qa | grep java 命令没有查到jdk包，但是使用java -version 命令却可以看到jdk版本，可以使用which java 命令查看java命令的执行路径，然后找到对应的jdk文件删除。
-
-{% endnote %}
-
-
-
-<h3 id="三、安装jdk"><a href="#三、安装jdk" class="headerlink" title="三、安装jdk"></a>三、安装jdk</h3><ol>
-<li>将下载好的安装包 jdk-8u151-linux-x64.tar.gz 上传到服务器指定目录下,我的是 /usr/local/yang/；</li>
-<li>解压安装包 <code>tar -zxvf jdk-8u151-linux-x64.tar.gz</code></li>
-</ol>
-<p><img src="https://www.qfeng.online/imgs/jdk/jdk_2020-06-20_10-54-05.jpg" srcset="/img/loading.gif" alt></p>
-<ol start="3">
-<li>添加环境变量： 编辑/etc/profile 文件 ： vim /etc/profile ,添加如下内容</li>
-</ol>
-<div class="hljs"><pre><code class="hljs shell">JAVA_HOME=/usr/local/yang/jdk1.8.0_151
-CLASSPATH=$JAVA_HOME/lib/
-PATH=$PATH:$JAVA_HOME/bin
-export PATH JAVA_HOME CLASSPATH</code></pre></div>
-
-<ol start="4">
-<li>重新加载配置文件 <code>source /etc/profile</code></li>
-</ol>
-<div class="hljs"><pre><code class="hljs shell">[root@slave1 lib]# source /etc/profile</code></pre></div>
-
-<ol start="5">
-<li>使用<code>java -version</code> 查看是否安装成功</li>
-</ol>
-<div class="hljs"><pre><code class="hljs shell">[root@slave1 lib]# java -version
-java version "1.8.0_151"
-Java(TM) SE Runtime Environment (build 1.8.0_151-b12)
-Java HotSpot(TM) 64-Bit Server VM (build 25.151-b12, mixed mode)</code></pre></div>
-
-<blockquote>
-<p>安装成功</p>
-</blockquote>
-
-            </article>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/environment/">environment</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/learning-note/">learning note</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
-              
-              
-                <div class="post-prevnext row">
-                  <div class="post-prev col-6">
-                    
-                    
-                      <a href="/2020/05/20/linux%E4%B8%8B%E5%AE%89%E8%A3%85jdk/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">linux下安装jdk</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </div>
-                  <div class="post-next col-6">
-                    
-                    
-                  </div>
-                </div>
-              
-            </div>
-
-            
-              <!-- Comments -->
-              <div class="comments" id="comments">
-                
-                
-  <div id="vcomments"></div>
-  <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
-
-  <script type="text/javascript">
-    var oldLoadVa = window.onload;
-    window.onload = function () {
-      oldLoadVa && oldLoadVa();
-
-      new Valine({
-        el: "#vcomments",
-        app_id: "DX9DnwxDPkNGy5RqXDMhTA7j-gzGzoHsz",
-        app_key: "WG6HcnSSHCnML90A8ODduwi1",
-        placeholder: "说点什么",
-        path: window.location.pathname,
-        avatar: "retro",
-        meta: ["nick","mail","link"],
-        pageSize: "10",
-        lang: "zh-CN",
-        highlight: false,
-        recordIP: false,
-        serverURLs: "",
-      });
-    };
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/archives/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
-      powered by Valine.</a></noscript>
+
 
 
               </div>
-            
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
-</div>
-
-      </div>
-    
-  </div>
-</div>
-
-<!-- Custom -->
-
-  <div class="col-lg-7 mx-auto nopadding-md">
-    <div class="container custom post-content mx-auto">
-      <img src="https://octodex.github.com/images/jetpacktocat.png" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
-    </div>
-  </div>
-
-
     
   </main>
 
@@ -535,31 +352,6 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.151-b12, mixed mode)</code></pre></d
 
 
 
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: 'article.markdown-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
-
 
 
   <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
@@ -567,7 +359,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.151-b12, mixed mode)</code></pre></d
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "linux下安装jdk&nbsp;",
+        "Archive&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
@@ -582,21 +374,6 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.151-b12, mixed mode)</code></pre></d
 
 
 
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
 
 
   <script  src="/js/local-search.js" ></script>
@@ -610,20 +387,6 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.151-b12, mixed mode)</code></pre></d
   </script>
 
 
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
 
 
 
