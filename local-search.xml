@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Euraka和zookeeper的区别(ACP)</title>
+    <link href="/2020/07/08/Euraka%E5%92%8Czookeeper%E7%9A%84%E5%8C%BA%E5%88%AB-ACP/"/>
+    <url>/2020/07/08/Euraka%E5%92%8Czookeeper%E7%9A%84%E5%8C%BA%E5%88%AB-ACP/</url>
+    
+    <content type="html"><![CDATA[<h1 id="zk和eureka的区别（CAP原则）"><a href="#zk和eureka的区别（CAP原则）" class="headerlink" title="zk和eureka的区别（CAP原则）"></a>zk和eureka的区别（CAP原则）</h1><h1 id="作为服务注册中心，Eureka比Zookeeper好在哪里"><a href="#作为服务注册中心，Eureka比Zookeeper好在哪里" class="headerlink" title="作为服务注册中心，Eureka比Zookeeper好在哪里"></a>作为服务注册中心，Eureka比Zookeeper好在哪里</h1><p>著名的CAP理论指出，<code>一个分布式系统不可能同时满足C(一致性)、A(可用性)和P(分区容错性)</code>。由于分区容错性在是分布式系统中必须要保证的，因此我们只能在A和C之间进行权衡。在此Zookeeper保证的是CP, 而Eureka则是AP。</p><h2 id="1-Zookeeper保证CP"><a href="#1-Zookeeper保证CP" class="headerlink" title="1 Zookeeper保证CP"></a>1 Zookeeper保证CP</h2><p>当向注册中心查询服务列表时，我们可以容忍注册中心返回的是几分钟以前的注册信息，但不能接受服务直接down掉不可用。也就是说，服务注册功能对可用性的要求要高于一致性。但是<code>zk会出现这样一种情况，当master节点因为网络故障与其他节点失去联系时，剩余节点会重新进行leader选举</code>。问题在于，<code>选举leader的时间太长，30 ~ 120s, 且选举期间整个zk集群都是不可用的，这就导致在选举期间注册服务瘫痪。</code>在云部署的环境下，因网络问题使得zk集群失去master节点是较大概率会发生的事，虽然服务能够最终恢复，但是漫长的选举时间导致的注册长期不可用是不能容忍的。</p><h1 id="zookeeper原理"><a href="#zookeeper原理" class="headerlink" title="zookeeper原理"></a>zookeeper原理</h1><div class="hljs"><pre><code class="hljs angelscript">zookeeper也可以作为注册中心，用于服务治理（zookeeper还有其他用途，例如：分布式事务锁等）   每启动一个微服务，就会去zk中注册一个临时子节点，例如：<span class="hljs-number">5</span>台订单服务，<span class="hljs-number">4</span>台商品服务（<span class="hljs-number">5</span>台订单服务在zk中的订单目录下创建的<span class="hljs-number">5</span>个临时节点）（<span class="hljs-number">4</span>台商品服务在zk中的商品目录下创建的<span class="hljs-number">4</span>个临时接点）每当有一个服务down机，由于是临时接点，此节点会立即被删除，并通知订阅该服务的微服务更新服务列表（zk上有watch，每当有节点更新，都会通知订阅该服务的微服务更新服务列表）每当有一个新的微服务注册进来，就会在对应的目录下创建临时子节点，并通知订阅该服务的微服务更新服务列表（zk上有watch，每当有节点更新，都会通知订阅该服务的微服务更新服务列表）每个微服务<span class="hljs-number">30</span>s向zk获取新的服务列表</code></pre></div><h2 id="2-Eureka保证AP"><a href="#2-Eureka保证AP" class="headerlink" title="2 Eureka保证AP"></a>2 Eureka保证AP</h2><ol><li><p>Eureka不再从注册列表中移除因为长时间没收到心跳而应该过期的服务 </p></li><li><p>Eureka仍然能够接受新服务的注册和查询请求，但是不会被同步到其它节点上(即保证当前节点依然可用) </p></li><li><p>当网络稳定时，当前实例新的注册信息会被同步到其它节点中</p></li></ol><p>因此，<code>Eureka可以很好的应对因网络故障导致部分节点失去联系的情况，而不会像zookeeper那样使整个注册服务瘫痪。</code></p><h1 id="eureka原理"><a href="#eureka原理" class="headerlink" title="eureka原理"></a>eureka原理</h1><div class="hljs"><pre><code class="hljs html">每一个微服务中都有eureka client，用于服务的注册于发现 （服务的注册：把自己注册到eureka server） （服务的发现：从eureka server获取自己需要的服务列表） 每一个微服务启动的时候，都需要去eureka server注册 当A服务需要调用B服务时，需要从eureka服务端获取B服务的服务列表，然后把列表缓存到本地，然后根据ribbon的客户端负载均衡规则，从服务列表中取到一个B服务，然后去调用此B服务 当A服务下次再此调用B服务时，如果发现本地已经存储了B的服务列表，就不需要再从eureka服务端获取B服务列表，直接根据ribbon的客户端负载均衡规则，从服务列表中取到一个B服务，然后去调用B服务 微服务，默认每30秒，就会从eureka服务端获取一次最新的服务列表 如果某台微服务down机，或者添加了几台机器， 此时eureka server会通知订阅他的客户端，并让客户端更新服务列表， 而且还会通知其他eureka server更新此信息 心跳检测，微服务每30秒向eureka server发送心跳， eureka server若90s之内都没有收到某个客户端的心跳，则认为此服务出了问题， 会从注册的服务列表中将其删除，并通知订阅它的客户端更新服务列表， 而且还会通知其他eureka server更新此信息 eureka server保护机制，通过打卡开关，可以让eureka server处于保护状态，主要是用于某eureka server由于网络或其他原因，导致接收不到其他微服务的心跳，此时不能盲目的将其他微服务从服务列表中删除。 具体规则：如果一段时间内，85%的服务都没有发送心跳，则此server进入保护状态，此状态下，可以正常接受注册，可以正常提供查询服务，但是不与其他server同步信息，也不会通知订阅它的客户端，这样就不会误杀其他微服务</code></pre></div><h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p><code>Eureka作为单纯的服务注册中心来说要比zookeeper更加“专业”，因为注册服务更重要的是可用性，我们可以接受短期内达不到一致性的状况</code>。不过Eureka目前1.X版本的实现是基于servlet的java web应用，它的极限性能肯定会受到影响。期待正在开发之中的2.X版本能够从servlet中独立出来成为单独可部署执行的服务。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>SpringCloud</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>question</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>JWT微服务鉴权</title>
     <link href="/2020/06/27/JWT%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%89%B4%E6%9D%83/"/>
     <url>/2020/06/27/JWT%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%89%B4%E6%9D%83/</url>
