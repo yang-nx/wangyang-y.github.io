@@ -676,7 +676,7 @@ sup > a::before,
   overflow: visible;
 }
 .markdown-body pre code {
-  font-size: 16px;
+  font-size: 15px;
   display: block;
   overflow-x: auto;
   padding: 0.5rem 0;
