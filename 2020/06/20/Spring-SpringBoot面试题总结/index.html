@@ -176,7 +176,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      68 字
+      261 字
     </span>
   
 
@@ -186,7 +186,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      2
        分钟
     </span>
   
@@ -226,13 +226,20 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月20日 晚上
+                  本文最后更新于：2020年7月11日 下午
                 
               </p>
             
             <article class="markdown-body">
-              <h3 id="1-Component-和-Bean的区别？"><a href="#1-Component-和-Bean的区别？" class="headerlink" title="1. @Component 和@ Bean的区别？"></a>1. @Component 和@ Bean的区别？</h3><p>@Component是贴在类上面的，自动检测和使用类路径扫描将bean添加到容器中。</p>
+              <h3 id="1、-Component-和-Bean的区别？"><a href="#1、-Component-和-Bean的区别？" class="headerlink" title="1、@Component 和@ Bean的区别？"></a>1、@Component 和@ Bean的区别？</h3><p>@Component是贴在类上面的，自动检测和使用类路径扫描将bean添加到容器中。</p>
 <p>@Bean的使用在方法上的，是将方法的返回值作为bean 注入到容器中，常和@Configuration结合使用。</p>
+<h3 id="2、几种事务不生效的问题"><a href="#2、几种事务不生效的问题" class="headerlink" title="2、几种事务不生效的问题"></a>2、几种事务不生效的问题</h3><p><strong>情况1</strong>：确定创建的mysql数据库表的引擎是InnoDB,MyISAM不支持事务</p>
+<p><strong>情况2：@Transactional</strong>注解到protected, private 方法上，事务不生效，也不会报错。</p>
+<p><strong>情况3：</strong>在业务层手动捕捉并处理异常，未向上抛出，事务不生效。</p>
+<p><strong>情况4：</strong>不要写到接口上，spring采用aop 针对具体实现类做的动态代理。</p>
+<p><strong>情况5</strong>：Spring的事务传播策略在内部方法调用时将不起作用，事务注解加到</p>
+<p>要调用方法上。</p>
+<p><strong>情况6：</strong>遇到非检测异常时，事务不开启，也无法回滚。以为Spirng的默认的事务规则是遇到运行异常（RuntimeException）和程序错误（Error）才会回滚。</p>
 
             </article>
             <hr>
