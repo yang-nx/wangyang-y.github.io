@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://www.qfeng.online/imgs/favicon.ico">
+  <link rel="icon" type="image/png" href="https://www.qfeng.online/imgs/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="愿君安好 愿君越来越好">
+  <meta name="author" content="wang-yang">
+  <meta name="keywords" content="wangyang">
+  <title>分布式事务解决方案 - 小楼昨夜又秋风</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/dracula.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>小楼昨夜又秋风</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('https://www.qfeng.online/imgs/%E6%84%8F%E5%A4%A7%E5%88%A9%E9%A3%8E%E6%83%85.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-09 21:24">
+      2020年7月9日 晚上
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      100
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2020年7月11日 下午
+                
+              </p>
+            
+            <article class="markdown-body">
+              <h1 id="分布式事务解决方案"><a href="#分布式事务解决方案" class="headerlink" title="分布式事务解决方案"></a>分布式事务解决方案</h1><h2 id="1-分布式事务解决方案"><a href="#1-分布式事务解决方案" class="headerlink" title="1.分布式事务解决方案"></a>1.分布式事务解决方案</h2><h3 id="1-1-本地事务与分布式事务"><a href="#1-1-本地事务与分布式事务" class="headerlink" title="1.1 本地事务与分布式事务"></a>1.1 本地事务与分布式事务</h3><h4 id="1-1-1-事务"><a href="#1-1-1-事务" class="headerlink" title="1.1.1 事务"></a>1.1.1 事务</h4><p>数据库事务(简称：事务，Transaction)是指数据库执行过程中的一个逻辑单位，由一个有限的数据库操作序列构成。</p>
+<p>事务拥有以下四个特性，习惯上被称为ACID特性：</p>
+<p><strong>原子性(Atomicity)</strong>：事务作为一个整体被执行，包含在其中的对数据库的操作要么全部被执行，要么都不执行。</p>
+<p><strong>一致性(Consistency)</strong>：事务应确保数据库的状态从一个一致状态转变为另一个一致状态。一致状态是指数据库中的数据应满足完整性约束。除此之外，一致性还有另外一层语义，就是事务的中间状态不能被观察到(这层语义也有说应该属于原子性)。</p>
+<p><strong>隔离性(Isolation)</strong>：多个事务并发执行时，一个事务的执行不应影响其他事务的执行，如同只有这一个操作在被数据库所执行一样。</p>
+<p><strong>持久性(Durability)</strong>：已被提交的事务对数据库的修改应该永久保存在数据库中。在事务结束时，此操作将不可逆转。</p>
+<h4 id="1-1-2-本地事务"><a href="#1-1-2-本地事务" class="headerlink" title="1.1.2 本地事务"></a>1.1.2 本地事务</h4><p>起初，事务仅限于对单一数据库资源的访问控制,架构服务化以后，事务的概念延伸到了服务中。倘若将一个单一的服务操作作为一个事务，那么整个服务操作只能涉及一个单一的数据库资源,这类基于单个服务单一数据库资源访问的事务，被称为本地事务(Local Transaction)。 </p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-10.png" srcset="/img/loading.gif" alt></p>
+<h4 id="1-1-3-分布式事务"><a href="#1-1-3-分布式事务" class="headerlink" title="1.1.3 分布式事务"></a>1.1.3 分布式事务</h4><p>​        分布式事务指事务的参与者、支持事务的服务器、资源服务器以及事务管理器分别位于不同的分布式系统的不同节点之上,且属于不同的应用，分布式事务需要保证这些操作要么全部成功，要么全部失败。本质上来说，<strong>分布式事务就是为了保证不同数据库的数据一致性</strong>。 </p>
+<p>​       最早的分布式事务应用架构很简单，不涉及服务间的访问调用，仅仅是服务内操作涉及到对多个数据库资源的访问。  </p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-11.png" srcset="/img/loading.gif" alt></p>
+<p>​        当一个服务操作访问不同的数据库资源，又希望对它们的访问具有事务特性时，就需要采用分布式事务来协调所有的事务参与者。</p>
+<p>​        对于上面介绍的分布式事务应用架构，尽管一个服务操作会访问多个数据库资源，但是毕竟整个事务还是控制在单一服务的内部。如果一个服务操作需要调用另外一个服务，这时的事务就需要跨越多个服务了。在这种情况下，起始于某个服务的事务在调用另外一个服务的时候，需要以某种机制流转到另外一个服务，从而使被调用的服务访问的资源也自动加入到该事务当中来。下图反映了这样一个跨越多个服务的分布式事务：</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-12.png" srcset="/img/loading.gif" alt></p>
+<p>​        如果将上面这两种场景(一个服务可以调用多个数据库资源，也可以调用其他服务)结合在一起，对此进行延伸，整个分布式事务的参与者将会组成如下图所示的树形拓扑结构。在一个跨服务的分布式事务中，事务的发起者和提交均系同一个，它可以是整个调用的客户端，也可以是客户端最先调用的那个服务。 </p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-13.png" srcset="/img/loading.gif" alt></p>
+<p>​         较之基于单一数据库资源访问的本地事务，分布式事务的应用架构更为复杂。在不同的分布式应用架构下，实现一个分布式事务要考虑的问题并不完全一样，比如对多资源的协调、事务的跨服务传播等，实现机制也是复杂多变。</p>
+<h3 id="1-2-分布式事务相关理论"><a href="#1-2-分布式事务相关理论" class="headerlink" title="1.2 分布式事务相关理论"></a>1.2 分布式事务相关理论</h3><h4 id="1-2-1-CAP定理"><a href="#1-2-1-CAP定理" class="headerlink" title="1.2.1 CAP定理"></a>1.2.1 CAP定理</h4><p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-20.jpg" srcset="/img/loading.gif" alt></p>
+<p>CAP定理是在 1998年加州大学的计算机科学家 Eric Brewer （埃里克.布鲁尔）提出，分布式系统有三个指标</p>
+<ul>
+<li>Consistency   一致性</li>
+<li>Availability     可用性</li>
+<li>Partition tolerance   分区容错性</li>
+</ul>
+<p><strong>它们的第一个字母分别是 C、A、P。Eric Brewer 说，这三个指标不可能同时做到。这个结论就叫做 CAP 定理。</strong></p>
+<h5 id="分区容错-Partition-tolerance"><a href="#分区容错-Partition-tolerance" class="headerlink" title="分区容错  Partition tolerance"></a>分区容错  Partition tolerance</h5><p>大多数分布式系统都分布在多个子网络。每个子网络就叫做一个区（partition）。分区容错的意思是，区间通信可能失败。比如，一台服务器放在中国，另一台服务器放在美国，这就是两个区，它们之间可能无法通信。</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-21.png" srcset="/img/loading.gif" alt></p>
+<p>上图中，G1 和 G2 是两台跨区的服务器。G1 向 G2 发送一条消息，G2 可能无法收到。系统设计的时候，必须考虑到这种情况。</p>
+<p>一般来说，分区容错无法避免，因此可以认为 CAP 的 P 总是成立。CAP 定理告诉我们，剩下的 C 和 A 无法同时做到。</p>
+<h5 id="可用性-Availability"><a href="#可用性-Availability" class="headerlink" title="可用性 Availability"></a>可用性 Availability</h5><p>Availability 中文叫做”可用性”，意思是只要收到用户的请求，服务器就必须给出回应。</p>
+<p>用户可以选择向 G1 或 G2 发起读操作。不管是哪台服务器，只要收到请求，就必须告诉用户，到底是 v0 还是 v1，否则就不满足可用性。</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-22.png" srcset="/img/loading.gif" alt></p>
+<h5 id="一致性-Consistency"><a href="#一致性-Consistency" class="headerlink" title="一致性 Consistency"></a>一致性 Consistency</h5><p>Consistency 中文叫做”一致性”。意思是，写操作之后的读操作，必须返回该值。</p>
+<p>举例来说，某条记录是 v0，用户向 G1 发起一个写操作，将其改为 v1。</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-23.png" srcset="/img/loading.gif" alt></p>
+<p>问题是，用户有可能向 G2 发起读操作，由于 G2 的值没有发生变化，因此返回的是 v0。G1 和 G2 读操作的结果不一致，这就不满足一致性了。</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-24.png" srcset="/img/loading.gif" alt></p>
+<p>为了让 G2 也能变为 v1，就要在 G1 写操作的时候，让 G1 向 G2 发送一条消息，要求 G2 也改成 v1。</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-25.png" srcset="/img/loading.gif" alt></p>
+<h5 id="一致性和可用性的矛盾"><a href="#一致性和可用性的矛盾" class="headerlink" title="一致性和可用性的矛盾"></a>一致性和可用性的矛盾</h5><p>一致性和可用性，为什么不可能同时成立？答案很简单，因为可能通信失败（即出现分区容错）。</p>
+<p>如果保证 G2 的一致性，那么 G1 必须在写操作时，锁定 G2 的读操作和写操作。只有数据同步后，才能重新开放读写。锁定期间，G2 不能读写，没有可用性。</p>
+<p>如果保证 G2 的可用性，那么势必不能锁定 G2，所以一致性不成立。</p>
+<p>综上所述，G2 无法同时做到一致性和可用性。系统设计时只能选择一个目标。如果追求一致性，那么无法保证所有节点的可用性；如果追求所有节点的可用性，那就没法做到一致性。</p>
+<h4 id="1-2-2-BASE理论"><a href="#1-2-2-BASE理论" class="headerlink" title="1.2.2 BASE理论"></a>1.2.2 BASE理论</h4><p>BASE：全称：Basically Available(基本可用)，Soft state（软状态）,和 Eventually consistent（最终一致性）三个短语的缩写，来自 ebay 的架构师提出。BASE 理论是对 CAP 中一致性和可用性权衡的结果，其来源于对大型互联网分布式实践的总结，是基于 CAP 定理逐步演化而来的。其核心思想是：</p>
+<blockquote>
+<p>既是无法做到强一致性（Strong consistency），但每个应用都可以根据自身的业务特点，采用适当的方式来使系统达到最终一致性（Eventual consistency）。</p>
+</blockquote>
+<h5 id="Basically-Available-基本可用"><a href="#Basically-Available-基本可用" class="headerlink" title="Basically Available(基本可用)"></a>Basically Available(基本可用)</h5><p><strong>损失部分可用功能，保证核心功能可用</strong></p>
+<p>什么是基本可用呢？假设系统，出现了不可预知的故障，但还是能用，相比较正常的系统而言：</p>
+<ol>
+<li>响应时间上的损失：正常情况下的搜索引擎 0.5 秒即返回给用户结果，而<strong>基本可用</strong>的搜索引擎可以在 1 秒作用返回结果。</li>
+<li>功能上的损失：在一个电商网站上，正常情况下，用户可以顺利完成每一笔订单，但是到了大促期间，为了保护购物系统的稳定性，部分消费者可能会被引导到一个降级页面。</li>
+</ol>
+<h5 id="Soft-state（软状态）"><a href="#Soft-state（软状态）" class="headerlink" title="Soft state（软状态）"></a>Soft state（软状态）</h5><p>什么是软状态呢？相对于原子性而言，要求多个节点的数据副本都是一致的，这是一种 “硬状态”。</p>
+<p>软状态指的是：允许系统中的数据存在中间状态，并认为该状态不影响系统的整体可用性，即允许系统在多个不同节点的数据副本存在数据延时。</p>
+<h5 id="Eventually-consistent（最终一致性）"><a href="#Eventually-consistent（最终一致性）" class="headerlink" title="Eventually consistent（最终一致性）"></a>Eventually consistent（最终一致性）</h5><p>系统能够保证在没有其他新的更新操作的情况下，数据最终一定能够达到一致的状态，因此所有客户端对系统的数据访问最终都能够获取到最新的值。</p>
+<h3 id="1-3-分布式事务解决方案"><a href="#1-3-分布式事务解决方案" class="headerlink" title="1.3 分布式事务解决方案"></a>1.3 分布式事务解决方案</h3><h4 id="1-3-1-基于XA协议的两阶段提交-2PC"><a href="#1-3-1-基于XA协议的两阶段提交-2PC" class="headerlink" title="1.3.1 基于XA协议的两阶段提交 2PC"></a>1.3.1 基于XA协议的两阶段提交 2PC</h4><p>首先我们来简要看下分布式事务处理的XA规范 ： </p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-14.png" srcset="/img/loading.gif" alt></p>
+<p>可知XA规范中分布式事务有AP，RM，TM组成：</p>
+<p>其中应用程序(Application Program ，简称AP)：AP定义事务边界（定义事务开始和结束）并访问事务边界内的资源。</p>
+<p>资源管理器(Resource Manager，简称RM)：Rm管理计算机共享的资源，许多软件都可以去访问这些资源，资源包含比如数据库、文件系统、打印机服务器等。</p>
+<p>事务管理器(Transaction Manager ，简称TM)：负责管理全局事务，分配事务唯一标识，监控事务的执行进度，并负责事务的提交、回滚、失败恢复等。</p>
+<p><strong>二阶段协议:</strong></p>
+<p><strong>第一阶段</strong>TM要求所有的RM准备提交对应的事务分支，询问RM是否有能力保证成功的提交事务分支，RM根据自己的情况，如果判断自己进行的工作可以被提交，那就对工作内容进行持久化，并给TM回执OK；否者给TM的回执NO。RM在发送了否定答复并回滚了已经完成的工作后，就可以丢弃这个事务分支信息了。</p>
+<p><strong>第二阶段</strong>TM根据阶段1各个RM prepare的结果，决定是提交还是回滚事务。如果所有的RM都prepare成功，那么TM通知所有的RM进行提交；如果有RM prepare回执NO的话，则TM通知所有RM回滚自己的事务分支。</p>
+<p>也就是TM与RM之间是通过两阶段提 交协议进行交互的.</p>
+<p><strong>优点：</strong> 尽量保证了数据的强一致，适合对数据强一致要求很高的关键领域。（其实也不能100%保证强一致）</p>
+<p><strong>缺点：</strong> 实现复杂，牺牲了可用性，对性能影响较大，不适合高并发高性能场景。</p>
+<h4 id="1-3-2-TCC补偿机制"><a href="#1-3-2-TCC补偿机制" class="headerlink" title="1.3.2 TCC补偿机制"></a>1.3.2 TCC补偿机制</h4><p>TCC 其实就是采用的补偿机制，其核心思想是：针对每个操作，都要注册一个与其对应的确认和补偿（撤销）操作。它分为三个阶段：</p>
+<ul>
+<li>Try 阶段主要是对业务系统做检测及资源预留</li>
+<li>Confirm 阶段主要是对业务系统做确认提交，Try阶段执行成功并开始执行 Confirm阶段时，默认 Confirm阶段是不会出错的。即：只要Try成功，Confirm一定成功。</li>
+<li>Cancel 阶段主要是在业务执行错误，需要回滚的状态下执行的业务取消，预留资源释放。</li>
+</ul>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-15.png" srcset="/img/loading.gif" alt></p>
+<p>例如： A要向 B 转账，思路大概是： </p>
+<div class="hljs"><pre><code class="hljs angelscript">我们有一个本地方法，里面依次调用 
+<span class="hljs-number">1</span>、首先在 Try 阶段，要先调用远程接口把 B和 A的钱给冻结起来。 
+<span class="hljs-number">2</span>、在 Confirm 阶段，执行远程调用的转账的操作，转账成功进行解冻。 
+<span class="hljs-number">3</span>、如果第<span class="hljs-number">2</span>步执行成功，那么转账成功，如果第二步执行失败，则调用远程冻结接口对应的解冻方法 (Cancel)。</code></pre></div>
+
+<p><strong>优点：</strong> 相比两阶段提交，可用性比较强</p>
+<p><strong>缺点：</strong> 数据的一致性要差一些。TCC属于应用层的一种补偿方式，所以需要程序员在实现的时候多写很多补偿的代码，在一些场景中，一些业务流程可能用TCC不太好定义及处理。</p>
+<h4 id="1-3-3-消息最终一致性"><a href="#1-3-3-消息最终一致性" class="headerlink" title="1.3.3 消息最终一致性"></a>1.3.3 消息最终一致性</h4><p>消息最终一致性应该是业界使用最多的，其核心思想是将分布式事务拆分成本地事务进行处理，这种思路是来源于ebay。我们可以从下面的流程图中看出其中的一些细节： </p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/9-16.png" srcset="/img/loading.gif" alt></p>
+<p>基本思路就是：</p>
+<p>消息生产方，需要额外建一个消息表，并记录消息发送状态。消息表和业务数据要在一个事务里提交，也就是说他们要在一个数据库里面。然后消息会经过MQ发送到消息的消费方。如果消息发送失败，会进行重试发送。</p>
+<p>消息消费方，需要处理这个消息，并完成自己的业务逻辑。此时如果本地事务处理成功，表明已经处理成功了，如果处理失败，那么就会重试执行。如果是业务上面的失败，可以给生产方发送一个业务补偿消息，通知生产方进行回滚等操作。</p>
+<p>生产方和消费方定时扫描本地消息表，把还没处理完成的消息或者失败的消息再发送一遍。如果有靠谱的自动对账补账逻辑，这种方案还是非常实用的。</p>
+<p><strong>优点：</strong> 一种非常经典的实现，避免了分布式事务，实现了最终一致性。</p>
+<p><strong>缺点：</strong> 消息表会耦合到业务系统中，如果没有封装好的解决方案，会有很多杂活需要处理。</p>
+<h2 id="2-基于Seata实现分布式事务"><a href="#2-基于Seata实现分布式事务" class="headerlink" title="2. 基于Seata实现分布式事务"></a>2. 基于Seata实现分布式事务</h2><h3 id="2-1-Seata简介"><a href="#2-1-Seata简介" class="headerlink" title="2.1 Seata简介"></a>2.1 Seata简介</h3><p>​    Seata（原名Fescar） 是阿里18年开源的分布式事务的框架。Fescar的开源对分布式事务框架领域影响很大。作为开源大户，Fescar来自阿里的GTS，经历了好几次双十一的考验，一经开源便颇受关注。后来Fescar改名为Seata。</p>
+<div class="hljs"><pre><code>Fescar虽然是二阶段提交协议的分布式事务，但是其解决了XA的一些缺点:</code></pre></div><ul>
+<li>单点问题:</li>
+<li>同步阻塞:Fescar的二阶段，其再第一阶段的时候本地事务就已经提交释放资源了，不会像XA会再两个prepare和commit阶段资源都锁住，并且Fescar,commit是异步操作，也是提升性能的一大关键。</li>
+<li>数据不一致:如果出现部分commit失败，那么fescar-server会根据当前的事务模式和分支事务的返回状态的结果来进行不同的重试策略。并且fescar的本地事务会在一阶段的时候进行提交，其实单看数据库来说在commit的时候数据库已经是一致的了。</li>
+<li>只能用于单一数据库: Fescar提供了两种模式，AT和MT。在AT模式下事务资源可以是任何支持ACID的数据库，在MT模式下事务资源没有限制，可以是缓存，可以是文件，可以是其他的等等。当然这两个模式也可以混用。</li>
+</ul>
+<p>同时Fescar也保留了接近0业务入侵的优点，只需要简单的配置Fescar的数据代理和加个注解，加一个Undolog表，就可以达到我们想要的目的。</p>
+<h3 id="2-2-实现原理"><a href="#2-2-实现原理" class="headerlink" title="2.2 实现原理"></a>2.2 实现原理</h3><p>Fescar将一个本地事务做为一个分布式事务分支，所有若干个分布在不同微服务中的本地事务共同组成了一个全局事务，结构如下。 </p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/12-1.png" srcset="/img/loading.gif" alt></p>
+<p><strong>Transaction Coordinator (TC)：</strong> 事务协调器，维护全局事务的运行状态，负责协调并驱动全局事务的提交或回滚。</p>
+<p><strong>Transaction Manager (TM)：</strong> 控制全局事务的边界，负责开启一个全局事务，并最终发起全局提交或全局回滚的决议。</p>
+<p><strong>Resource Manager (RM)：</strong> 控制分支事务，负责分支注册、状态汇报，并接收事务协调器的指令，驱动分支（本地）事务的提交和回滚。</p>
+<p>一个典型的分布式事务过程：</p>
+<ol>
+<li>TM 向 TC 申请开启一个全局事务，全局事务创建成功并生成一个全局唯一的 XID。</li>
+<li>XID 在微服务调用链路的上下文中传播。</li>
+<li>RM 向 TC 注册分支事务，将其纳入 XID 对应全局事务的管辖。</li>
+<li>TM 向 TC 发起针对 XID 的全局提交或回滚决议。</li>
+<li>TC 调度 XID 下管辖的全部分支事务完成提交或回滚请求。</li>
+</ol>
+<h3 id="2-3-Fescar模式"><a href="#2-3-Fescar模式" class="headerlink" title="2.3 Fescar模式"></a>2.3 Fescar模式</h3><p>Fescar对分布式事务的实现提供了3种模式，AT模式、MT模式和混合模式：</p>
+<h4 id="2-3-1-AT模式"><a href="#2-3-1-AT模式" class="headerlink" title="2.3.1 AT模式"></a>2.3.1 AT模式</h4><p>业务逻辑不需要关注事务机制，分支与全局事务的交互过程自动进行。</p>
+<p><strong>AT模式</strong>：主要关注多 DB 访问的数据一致性，实现起来比较简单，对业务的侵入较小。</p>
+<p>AT模式部分代码如下：不需要关注执行状态，对业务代码侵入较小。类似代码如下，只需要为方法添加<code>@GlobalTransactional</code>注解即可。</p>
+<p>AT模式的核心是对业务无侵入，是一种改进后的两阶段提交，其设计思路如图：</p>
+<p><strong>第一阶段：</strong></p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/1558409540227.png" srcset="/img/loading.gif" alt></p>
+<p>核心在于对业务sql进行解析，转换成undolog，两阶段提交往往对资源的锁定需要持续到第二阶段实际的提交或者回滚操作，而有了回滚日志之后，可以在第一阶段释放对资源的锁定，降低了锁范围，提高效率，即使第二阶段发生异常需要回滚，只需找对undolog中对应数据并反解析成sql来达到回滚目的。Seata通过代理数据源将业务sql的执行解析成undolog来与业务数据的更新同时入库，达到了对业务无侵入的效果。</p>
+<p><strong>第二阶段：</strong></p>
+<p>如果决议是全局提交，此时分支事务此时已经完成提交，不需要同步协调处理（只需要异步清理回滚日志），Phase2 可以非常快速地完成。</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/1558409853936.png" srcset="/img/loading.gif" alt></p>
+<p>如果决议是全局回滚，RM 收到协调器发来的回滚请求，通过 XID 和 Branch ID 找到相应的回滚日志记录，通过回滚记录生成反向的更新 SQL 并执行，以完成分支的回滚。</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/1558409898660.png" srcset="/img/loading.gif" alt></p>
+<h4 id="2-3-2-MT模式"><a href="#2-3-2-MT模式" class="headerlink" title="2.3.2 MT模式"></a>2.3.2 MT模式</h4><p>业务逻辑需要被分解为 Prepare/Commit/Rollback 3 部分，形成一个 MT 分支，加入全局事务。</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/12-2.png" srcset="/img/loading.gif" alt></p>
+<p>MT 模式一方面是 AT 模式的补充。另外，更重要的价值在于，通过 MT 模式可以把众多非事务性资源纳入全局事务的管理中</p>
+<h4 id="2-3-3-混合模式"><a href="#2-3-3-混合模式" class="headerlink" title="2.3.3 混合模式"></a>2.3.3 混合模式</h4><p>因为 AT 和 MT 模式的分支从根本上行为模式是一致的，所以可以完全兼容，即，一个全局事务中，可以同时存在 AT 和 MT 的分支。这样就可以达到全面覆盖业务场景的目的：AT 模式可以支持的，使用 AT 模式；AT 模式暂时支持不了的，用 MT 模式来替代。另外，自然的，MT 模式管理的非事务性资源也可以和支持事务的关系型数据库资源一起，纳入同一个分布式事务的管理中。</p>
+<h3 id="2-4-代码实现"><a href="#2-4-代码实现" class="headerlink" title="2.4 代码实现"></a>2.4 代码实现</h3><h4 id="2-4-1-分布式事务公共模块"><a href="#2-4-1-分布式事务公共模块" class="headerlink" title="2.4.1 分布式事务公共模块"></a>2.4.1 分布式事务公共模块</h4><p>（1）创建工程 changgou_common_fescar，引入依赖</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">fescar.version</span>&gt;</span>0.4.2<span class="hljs-tag">&lt;/<span class="hljs-name">fescar.version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.changgou<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>changgou_common<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.fescar<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>fescar-tm<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;fescar.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.fescar<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>fescar-spring<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;fescar.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span></code></pre></div>
+
+<p>（2）将<code>fescar配置文件</code>文件夹中的所有配置文件拷贝到resources工程下，如下图：</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/1558411118206.png" srcset="/img/loading.gif" alt></p>
+<p>其中file.conf有2个配置</p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/1558411274927.png" srcset="/img/loading.gif" alt></p>
+<p>service.vgroup_mapping.my_test_tx_group 映射到相应的 Fescar-Server 集群名称，然后再根据集群名称.grouplist 获取到可用服务列表。</p>
+<p>（3）创建FescarRMRequestFilter，给每个线程绑定一个XID （资源提供）</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FescarRMRequestFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OncePerRequestFilter</span> </span>&#123;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Logger LOGGER = org.slf4j.LoggerFactory.getLogger( FescarRMRequestFilter<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 给每次线程请求绑定一个XID</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> request</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> response</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> filterChain</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilterInternal</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)</span> <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;
+        String currentXID = request.getHeader( FescarAutoConfiguration.FESCAR_XID);
+        <span class="hljs-keyword">if</span>(!StringUtils.isEmpty(currentXID))&#123;
+            RootContext.bind(currentXID);
+            LOGGER.info(<span class="hljs-string">"当前线程绑定的XID :"</span> + currentXID);
+        &#125;
+        <span class="hljs-keyword">try</span>&#123;
+            filterChain.doFilter(request, response);
+        &#125; <span class="hljs-keyword">finally</span> &#123;
+            String unbindXID = RootContext.unbind();
+            <span class="hljs-keyword">if</span>(unbindXID != <span class="hljs-keyword">null</span>)&#123;
+                LOGGER.info(<span class="hljs-string">"当前线程从指定XID中解绑 XID :"</span> + unbindXID);
+                <span class="hljs-keyword">if</span>(!currentXID.equals(unbindXID))&#123;
+                    LOGGER.info(<span class="hljs-string">"当前线程的XID发生变更"</span>);
+                &#125;
+            &#125;
+            <span class="hljs-keyword">if</span>(currentXID != <span class="hljs-keyword">null</span>)&#123;
+                LOGGER.info(<span class="hljs-string">"当前线程的XID发生变更"</span>);
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<p>（4）创建FescarRestInterceptor过滤器，每次请求其他微服务的时候，都将XID携带过去。（资源提供）</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FescarRestInterceptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">RequestInterceptor</span>, <span class="hljs-title">ClientHttpRequestInterceptor</span> </span>&#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">apply</span><span class="hljs-params">(RequestTemplate requestTemplate)</span> </span>&#123;
+        String xid = RootContext.getXID();
+        <span class="hljs-keyword">if</span>(!StringUtils.isEmpty(xid))&#123;
+            requestTemplate.header( FescarAutoConfiguration.FESCAR_XID, xid);
+        &#125;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> ClientHttpResponse <span class="hljs-title">intercept</span><span class="hljs-params">(HttpRequest request, <span class="hljs-keyword">byte</span>[] body, ClientHttpRequestExecution execution)</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+        String xid = RootContext.getXID();
+        <span class="hljs-keyword">if</span>(!StringUtils.isEmpty(xid))&#123;
+            HttpHeaders headers = request.getHeaders();
+            headers.put( FescarAutoConfiguration.FESCAR_XID, Collections.singletonList(xid));
+        &#125;
+        <span class="hljs-keyword">return</span> execution.execute(request, body);
+    &#125;
+&#125;</code></pre></div>
+
+<p>（5）创建FescarAutoConfiguration类  （资源提供）</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/**</span>
+<span class="hljs-comment"> *  * 创建数据源</span>
+<span class="hljs-comment"> *  * 定义全局事务管理器扫描对象</span>
+<span class="hljs-comment"> *  * 给所有RestTemplate添加头信息防止微服务之间调用问题</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FescarAutoConfiguration</span> </span>&#123;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String FESCAR_XID = <span class="hljs-string">"fescarXID"</span>;
+
+    <span class="hljs-comment">/***</span>
+<span class="hljs-comment">     * 创建代理数据库</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> environment</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> DataSource <span class="hljs-title">dataSource</span><span class="hljs-params">(Environment environment)</span></span>&#123;
+        DruidDataSource dataSource = <span class="hljs-keyword">new</span> DruidDataSource();
+        dataSource.setUrl(environment.getProperty(<span class="hljs-string">"spring.datasource.url"</span>));
+        <span class="hljs-keyword">try</span> &#123;
+            dataSource.setDriver(DriverManager.getDriver(environment.getProperty(<span class="hljs-string">"spring.datasource.url"</span>)));
+        &#125; <span class="hljs-keyword">catch</span> (SQLException e) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"can't recognize dataSource Driver"</span>);
+        &#125;
+        dataSource.setUsername(environment.getProperty(<span class="hljs-string">"spring.datasource.username"</span>));
+        dataSource.setPassword(environment.getProperty(<span class="hljs-string">"spring.datasource.password"</span>));
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DataSourceProxy(dataSource);
+    &#125;
+
+    <span class="hljs-comment">/***</span>
+<span class="hljs-comment">     * 全局事务扫描器</span>
+<span class="hljs-comment">     * 用来解析带有<span class="hljs-doctag">@GlobalTransactional</span>注解的方法，然后采用AOP的机制控制事务</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> environment</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> GlobalTransactionScanner <span class="hljs-title">globalTransactionScanner</span><span class="hljs-params">(Environment environment)</span></span>&#123;
+        String applicationName = environment.getProperty(<span class="hljs-string">"spring.application.name"</span>);
+        String groupName = environment.getProperty(<span class="hljs-string">"fescar.group.name"</span>);
+        <span class="hljs-keyword">if</span>(applicationName == <span class="hljs-keyword">null</span>)&#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> GlobalTransactionScanner(groupName == <span class="hljs-keyword">null</span> ? <span class="hljs-string">"my_test_tx_group"</span> : groupName);
+        &#125;<span class="hljs-keyword">else</span>&#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> GlobalTransactionScanner(applicationName, groupName == <span class="hljs-keyword">null</span> ? <span class="hljs-string">"my_test_tx_group"</span> : groupName);
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">/***</span>
+<span class="hljs-comment">     * 每次微服务和微服务之间相互调用</span>
+<span class="hljs-comment">     * 要想控制全局事务，每次TM都会请求TC生成一个XID，每次执行下一个事务，也就是调用其他微服务的时候都需要将该XID传递过去</span>
+<span class="hljs-comment">     * 所以我们可以每次请求的时候，都获取头中的XID，并将XID传递到下一个微服务</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> restTemplates</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@ConditionalOnBean</span>(&#123;RestTemplate<span class="hljs-class">.<span class="hljs-keyword">class</span>&#125;)</span>
+<span class="hljs-class">    @<span class="hljs-title">Bean</span></span>
+<span class="hljs-class">    <span class="hljs-title">public</span> <span class="hljs-title">Object</span> <span class="hljs-title">addFescarInterceptor</span>(<span class="hljs-title">Collection</span>&lt;<span class="hljs-title">RestTemplate</span>&gt; <span class="hljs-title">restTemplates</span>)</span>&#123;
+        restTemplates.stream()
+                .forEach(restTemplate -&gt; &#123;
+                    List&lt;ClientHttpRequestInterceptor&gt; interceptors = restTemplate.getInterceptors();
+                    <span class="hljs-keyword">if</span>(interceptors != <span class="hljs-keyword">null</span>)&#123;
+                        interceptors.add(fescarRestInterceptor());
+                    &#125;
+                &#125;);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Object();
+    &#125;
+
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> FescarRMRequestFilter <span class="hljs-title">fescarRMRequestFilter</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FescarRMRequestFilter();
+    &#125;
+
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> FescarRestInterceptor <span class="hljs-title">fescarRestInterceptor</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FescarRestInterceptor();
+    &#125;
+&#125;</code></pre></div>
+
+<h4 id="2-4-2-分布式事务的实现"><a href="#2-4-2-分布式事务的实现" class="headerlink" title="2.4.2 分布式事务的实现"></a>2.4.2 分布式事务的实现</h4><p>（1）涉及到分布式事务的数据库添加表</p>
+<div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`undo_log`</span> (
+  <span class="hljs-string">`id`</span> <span class="hljs-built_in">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,
+  <span class="hljs-string">`branch_id`</span> <span class="hljs-built_in">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`xid`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`rollback_info`</span> longblob <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`log_status`</span> <span class="hljs-built_in">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`log_created`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`log_modified`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`ext`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>),
+  <span class="hljs-keyword">KEY</span> <span class="hljs-string">`idx_unionkey`</span> (<span class="hljs-string">`xid`</span>,<span class="hljs-string">`branch_id`</span>)
+) <span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span> AUTO_INCREMENT=<span class="hljs-number">200</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CHARSET</span>=utf8;</code></pre></div>
+
+<p>核心在于对业务sql进行解析，转换成undolog,所以只要支持Fescar分布式事务的微服务数据都需要导入该表结构</p>
+<p>（2）需要添加分布式事务的微服务（<strong>商品微服务、订单微服务</strong>）添加对 changgou_common_fescar的依赖</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--fescar依赖--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.changgou<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>changgou_common_fescar<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
+
+<p>（3）在订单微服务的OrderServiceImpl的add方法上增加@GlobalTransactional(name = “order_add”)注解</p>
+<p>（4）启动Fescar-server，打开seata包/fescar-server-0.4.2/bin,双击fescar-server.bat启动fescar-server，如下：  </p>
+<p><img src="https://www.qfeng.online/imgs/springcloud/assets/1558413893986.png" srcset="/img/loading.gif" alt></p>
+<p><a href="https://github.com/seata/seata/releases" target="_blank" rel="noopener">https://github.com/seata/seata/releases</a></p>
+<h4 id="2-4-3-测试"><a href="#2-4-3-测试" class="headerlink" title="2.4.3 测试"></a>2.4.3 测试</h4><p>（1）功能测试，看功能能否正常执行。</p>
+<p>（2）异常测试，我们在方法中添加<code>int x=1/0</code>  ，看库存信息是否能够回滚。</p>
+<h2 id="3-基于消息队列实现分布式事务"><a href="#3-基于消息队列实现分布式事务" class="headerlink" title="3.基于消息队列实现分布式事务"></a>3.基于消息队列实现分布式事务</h2><p><img src="https://www.qfeng.online/imgs/springcloud/assets/1563784993295.png" srcset="/img/loading.gif" alt="1563784993295"></p>
+<h3 id="3-1-准备工作"><a href="#3-1-准备工作" class="headerlink" title="3.1 准备工作"></a>3.1 准备工作</h3><h4 id="3-1-1-changgou-order库新增数据表"><a href="#3-1-1-changgou-order库新增数据表" class="headerlink" title="3.1.1 changgou_order库新增数据表"></a>3.1.1 changgou_order库新增数据表</h4><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">EXISTS</span> <span class="hljs-string">`tb_task`</span>;
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`tb_task`</span> (
+  <span class="hljs-string">`id`</span> <span class="hljs-built_in">bigint</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'任务id'</span>,
+  <span class="hljs-string">`create_time`</span> datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`update_time`</span> datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`delete_time`</span> datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`task_type`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'任务类型'</span>,
+  <span class="hljs-string">`mq_exchange`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'交换机名称'</span>,
+  <span class="hljs-string">`mq_routingkey`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'routingkey'</span>,
+  <span class="hljs-string">`request_body`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">512</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'任务请求的内容'</span>,
+  <span class="hljs-string">`status`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'任务状态'</span>,
+  <span class="hljs-string">`errormsg`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">512</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'任务错误信息'</span>,
+  PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>)
+) <span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CHARSET</span>=utf8;</code></pre></div>
+
+
+
+<div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">EXISTS</span> <span class="hljs-string">`tb_task_his`</span>;
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`tb_task_his`</span> (
+  <span class="hljs-string">`id`</span> <span class="hljs-built_in">bigint</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'任务id'</span>,
+  <span class="hljs-string">`create_time`</span> datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`update_time`</span> datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`delete_time`</span> datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`task_type`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'任务类型'</span>,
+  <span class="hljs-string">`mq_exchange`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'交换机名称'</span>,
+  <span class="hljs-string">`mq_routingkey`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'routingkey'</span>,
+  <span class="hljs-string">`request_body`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">512</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'任务请求的内容'</span>,
+  <span class="hljs-string">`status`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'任务状态'</span>,
+  <span class="hljs-string">`errormsg`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">512</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+  PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>)
+) <span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span> AUTO_INCREMENT=<span class="hljs-number">9</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CHARSET</span>=utf8;</code></pre></div>
+
+
+
+<h4 id="3-1-2-changgou-service-order-api添加相关实体类"><a href="#3-1-2-changgou-service-order-api添加相关实体类" class="headerlink" title="3.1.2 changgou_service_order_api添加相关实体类"></a>3.1.2 changgou_service_order_api添加相关实体类</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Table</span>(name=<span class="hljs-string">"tb_task"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Task</span> </span>&#123;
+
+    <span class="hljs-meta">@Id</span>
+    <span class="hljs-keyword">private</span> Long id;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"create_time"</span>)
+    <span class="hljs-keyword">private</span> Date createTime;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"update_time"</span>)
+    <span class="hljs-keyword">private</span> Date updateTime;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"delete_time"</span>)
+    <span class="hljs-keyword">private</span> Date deleteTime;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"task_type"</span>)
+    <span class="hljs-keyword">private</span> String taskType;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"mq_exchange"</span>)
+    <span class="hljs-keyword">private</span> String mqExchange;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"mq_routingkey"</span>)
+    <span class="hljs-keyword">private</span> String mqRoutingkey;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"request_body"</span>)
+    <span class="hljs-keyword">private</span> String requestBody;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"status"</span>)
+    <span class="hljs-keyword">private</span> String status;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"errormsg"</span>)
+    <span class="hljs-keyword">private</span> String errormsg;
+    
+    <span class="hljs-comment">//getter，setter略</span>
+&#125;</code></pre></div>
+
+
+
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Table</span>(name=<span class="hljs-string">"tb_task_his"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TaskHis</span> </span>&#123;
+
+    <span class="hljs-meta">@Id</span>
+    <span class="hljs-keyword">private</span> Long id;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"create_time"</span>)
+    <span class="hljs-keyword">private</span> Date createTime;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"update_time"</span>)
+    <span class="hljs-keyword">private</span> Date updateTime;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"delete_time"</span>)
+    <span class="hljs-keyword">private</span> Date deleteTime;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"task_type"</span>)
+    <span class="hljs-keyword">private</span> String taskType;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"mq_exchange"</span>)
+    <span class="hljs-keyword">private</span> String mqExchange;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"mq_routingkey"</span>)
+    <span class="hljs-keyword">private</span> String mqRoutingkey;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"request_body"</span>)
+    <span class="hljs-keyword">private</span> String requestBody;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"status"</span>)
+    <span class="hljs-keyword">private</span> String status;
+
+    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"errormsg"</span>)
+    <span class="hljs-keyword">private</span> String errormsg;
+
+    <span class="hljs-comment">//getter，setter略</span>
+&#125;</code></pre></div>
+
+
+
+<h4 id="3-1-3-changgou-user新增积分日志表"><a href="#3-1-3-changgou-user新增积分日志表" class="headerlink" title="3.1.3 changgou_user新增积分日志表"></a>3.1.3 changgou_user新增积分日志表</h4><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">EXISTS</span> <span class="hljs-string">`tb_point_log`</span>;
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`tb_point_log`</span> (
+  <span class="hljs-string">`order_id`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">200</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`user_id`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">200</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+  <span class="hljs-string">`point`</span> <span class="hljs-built_in">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+  PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`order_id`</span>)
+) <span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CHARSET</span>=utf8;</code></pre></div>
+
+
+
+<h4 id="3-1-4-changgou-service-user-api添加实体类-PointLog"><a href="#3-1-4-changgou-service-user-api添加实体类-PointLog" class="headerlink" title="3.1.4 changgou_service_user_api添加实体类 PointLog"></a>3.1.4 changgou_service_user_api添加实体类 PointLog</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Table</span>(name=<span class="hljs-string">"tb_point_log"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PointLog</span> </span>&#123;
+
+    <span class="hljs-keyword">private</span> String orderId;
+    <span class="hljs-keyword">private</span> String userId;
+    <span class="hljs-keyword">private</span> Integer point;
+    <span class="hljs-comment">//getter，setter略</span>
+&#125;</code></pre></div>
+
+
+
+<h4 id="3-1-5-changgou-service-order添加rabbitMQ配置类"><a href="#3-1-5-changgou-service-order添加rabbitMQ配置类" class="headerlink" title="3.1.5 changgou_service_order添加rabbitMQ配置类"></a>3.1.5 changgou_service_order添加rabbitMQ配置类</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RabbitMQConfig</span> </span>&#123;
+    <span class="hljs-comment">//添加积分任务交换机</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String EX_BUYING_ADDPOINTUSER = <span class="hljs-string">"ex_buying_addpointuser"</span>;
+
+    <span class="hljs-comment">//添加积分消息队列</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String CG_BUYING_ADDPOINT = <span class="hljs-string">"cg_buying_addpoint"</span>;
+
+    <span class="hljs-comment">//完成添加积分消息队列</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String CG_BUYING_FINISHADDPOINT = <span class="hljs-string">"cg_buying_finishaddpoint"</span>;
+
+    <span class="hljs-comment">//添加积分路由key</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String CG_BUYING_ADDPOINT_KEY = <span class="hljs-string">"addpoint"</span>;
+
+    <span class="hljs-comment">//完成添加积分路由key</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String CG_BUYING_FINISHADDPOINT_KEY = <span class="hljs-string">"finishaddpoint"</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 交换机配置</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> the exchange</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Bean</span>(EX_BUYING_ADDPOINTUSER)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Exchange <span class="hljs-title">EX_BUYING_ADDPOINTUSER</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> ExchangeBuilder.directExchange(EX_BUYING_ADDPOINTUSER).durable(<span class="hljs-keyword">true</span>).build();
+    &#125;
+    <span class="hljs-comment">//声明队列</span>
+    <span class="hljs-meta">@Bean</span>(CG_BUYING_FINISHADDPOINT)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Queue <span class="hljs-title">QUEUE_CG_BUYING_FINISHADDPOINT</span><span class="hljs-params">()</span> </span>&#123;
+        Queue queue = <span class="hljs-keyword">new</span> Queue(CG_BUYING_FINISHADDPOINT);
+        <span class="hljs-keyword">return</span> queue;
+    &#125;
+    <span class="hljs-comment">//声明队列</span>
+    <span class="hljs-meta">@Bean</span>(CG_BUYING_ADDPOINT)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Queue <span class="hljs-title">QUEUE_CG_BUYING_ADDPOINT</span><span class="hljs-params">()</span> </span>&#123;
+        Queue queue = <span class="hljs-keyword">new</span> Queue(CG_BUYING_ADDPOINT);
+        <span class="hljs-keyword">return</span> queue;
+    &#125;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 绑定队列到交换机 .</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> queue    the queue</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> exchange the exchange</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> the binding</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Binding <span class="hljs-title">BINDING_QUEUE_FINISHADDPOINT</span><span class="hljs-params">(@Qualifier(CG_BUYING_FINISHADDPOINT)</span> Queue queue, @<span class="hljs-title">Qualifier</span><span class="hljs-params">(EX_BUYING_ADDPOINTUSER)</span> Exchange exchange) </span>&#123;
+        <span class="hljs-keyword">return</span> BindingBuilder.bind(queue).to(exchange).with(CG_BUYING_FINISHADDPOINT_KEY).noargs();
+    &#125;
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Binding <span class="hljs-title">BINDING_QUEUE_ADDPOINT</span><span class="hljs-params">(@Qualifier(CG_BUYING_ADDPOINT)</span> Queue queue, @<span class="hljs-title">Qualifier</span><span class="hljs-params">(EX_BUYING_ADDPOINTUSER)</span> Exchange exchange) </span>&#123;
+        <span class="hljs-keyword">return</span> BindingBuilder.bind(queue).to(exchange).with(CG_BUYING_ADDPOINT_KEY).noargs();
+    &#125;
+&#125;</code></pre></div>
+
+
+
+<h3 id="3-2-订单服务添加任务并发送"><a href="#3-2-订单服务添加任务并发送" class="headerlink" title="3.2 订单服务添加任务并发送"></a>3.2 订单服务添加任务并发送</h3><h4 id="3-2-1-修改添加订单方法"><a href="#3-2-1-修改添加订单方法" class="headerlink" title="3.2.1 修改添加订单方法"></a>3.2.1 修改添加订单方法</h4><p>当添加订单的时候，添加任务表中相关数据, 局部代码如下</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//增加任务表记录</span>
+Task task = <span class="hljs-keyword">new</span> Task();
+task.setCreateTime(<span class="hljs-keyword">new</span> Date());
+task.setUpdateTime(<span class="hljs-keyword">new</span> Date());
+task.setMqExchange(RabbitMQConfig.EX_BUYING_ADDPOINTURSE);
+task.setMqRoutingkey(RabbitMQConfig.CG_BUYING_ADDPOINT_KEY);
+
+Map map = <span class="hljs-keyword">new</span> HashMap();
+map.put(<span class="hljs-string">"userName"</span>,order.getUsername());
+map.put(<span class="hljs-string">"orderId"</span>,order.getId());
+map.put(<span class="hljs-string">"point"</span>,order.getPayMoney());
+task.setRequestBody(JSON.toJSONString(map));
+taskMapper.insertSelective(task);</code></pre></div>
+
+
+
+<h4 id="3-2-2-定时扫描任务表最新数据"><a href="#3-2-2-定时扫描任务表最新数据" class="headerlink" title="3.2.2 定时扫描任务表最新数据"></a>3.2.2 定时扫描任务表最新数据</h4><p>订单服务新增定时任务类，获取小于系统当前时间的所有任务数据</p>
+<h5 id="3-2-2-1-修改订单服务启动类，添加开启定时任务注解"><a href="#3-2-2-1-修改订单服务启动类，添加开启定时任务注解" class="headerlink" title="3.2.2.1 修改订单服务启动类，添加开启定时任务注解"></a>3.2.2.1 修改订单服务启动类，添加开启定时任务注解</h5><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@EnableScheduling</span></code></pre></div>
+
+<h5 id="3-2-2-2-定义定时任务类"><a href="#3-2-2-2-定义定时任务类" class="headerlink" title="3.2.2.2 定义定时任务类"></a>3.2.2.2 定义定时任务类</h5><h6 id="3-2-2-2-1-查询最新数据"><a href="#3-2-2-2-1-查询最新数据" class="headerlink" title="3.2.2.2.1 查询最新数据"></a>3.2.2.2.1 查询最新数据</h6><p>更新taskMapper新增方法，查询所有小于系统当前时间的数据</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">TaskMapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Mapper</span>&lt;<span class="hljs-title">Task</span>&gt; </span>&#123;
+
+    <span class="hljs-meta">@Select</span>(<span class="hljs-string">"SELECT * from tb_task WHERE update_time&lt;#&#123;currentTime&#125;"</span>)
+    <span class="hljs-meta">@Results</span>(&#123;<span class="hljs-meta">@Result</span>(column = <span class="hljs-string">"create_time"</span>,property = <span class="hljs-string">"createTime"</span>),
+            <span class="hljs-meta">@Result</span>(column = <span class="hljs-string">"update_time"</span>,property = <span class="hljs-string">"updateTime"</span>),
+            <span class="hljs-meta">@Result</span>(column = <span class="hljs-string">"delete_time"</span>,property = <span class="hljs-string">"deleteTime"</span>),
+            <span class="hljs-meta">@Result</span>(column = <span class="hljs-string">"task_type"</span>,property = <span class="hljs-string">"taskType"</span>),
+            <span class="hljs-meta">@Result</span>(column = <span class="hljs-string">"mq_exchange"</span>,property = <span class="hljs-string">"mqExchange"</span>),
+            <span class="hljs-meta">@Result</span>(column = <span class="hljs-string">"mq_routingkey"</span>,property = <span class="hljs-string">"mqRoutingkey"</span>),
+            <span class="hljs-meta">@Result</span>(column = <span class="hljs-string">"request_body"</span>,property = <span class="hljs-string">"requestBody"</span>),
+            <span class="hljs-meta">@Result</span>(column = <span class="hljs-string">"status"</span>,property = <span class="hljs-string">"status"</span>),
+            <span class="hljs-meta">@Result</span>(column = <span class="hljs-string">"errormsg"</span>,property = <span class="hljs-string">"errormsg"</span>)&#125;)
+    <span class="hljs-function">List&lt;Task&gt; <span class="hljs-title">findTaskLessTanCurrentTime</span><span class="hljs-params">(Date currentTime)</span></span>;
+&#125;</code></pre></div>
+
+<h6 id="3-2-2-2-2-任务类实现"><a href="#3-2-2-2-2-任务类实现" class="headerlink" title="3.2.2.2.2 任务类实现"></a>3.2.2.2.2 任务类实现</h6><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueryPointTask</span> </span>&#123;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> RabbitTemplate rabbitTemplate;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> TaskMapper taskMapper;
+
+    <span class="hljs-meta">@Scheduled</span>(cron = <span class="hljs-string">"0 0/2 * * * ?"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">queryTask</span><span class="hljs-params">()</span></span>&#123;
+
+        <span class="hljs-comment">//1.获取小于系统当前时间数据</span>
+        List&lt;Task&gt; taskList = taskMapper.findTaskLessTanCurrentTime(<span class="hljs-keyword">new</span> Date());
+
+        <span class="hljs-keyword">if</span> (taskList!=<span class="hljs-keyword">null</span> &amp;&amp; taskList.size()&gt;<span class="hljs-number">0</span>)&#123;
+            <span class="hljs-comment">//将任务数据发送到消息队列</span>
+            <span class="hljs-keyword">for</span> (Task task : taskList) &#123;
+ rabbitTemplate.convertAndSend(RabbitMQConfig.EX_BUYING_ADDPOINTURSE,RabbitMQConfig.CG_BUYING_ADDPOINT_KEY, JSON.toJSONString(task));
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+
+
+<h3 id="3-3-用户服务更改积分"><a href="#3-3-用户服务更改积分" class="headerlink" title="3.3 用户服务更改积分"></a>3.3 用户服务更改积分</h3><h4 id="3-3-1-添加rabbitmq配置类-与订单服务相同"><a href="#3-3-1-添加rabbitmq配置类-与订单服务相同" class="headerlink" title="3.3.1 添加rabbitmq配置类(与订单服务相同)"></a>3.3.1 添加rabbitmq配置类(与订单服务相同)</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RabbitMQConfig</span> </span>&#123;
+    <span class="hljs-comment">//添加积分任务交换机</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String EX_BUYING_ADDPOINTURSE = <span class="hljs-string">"ex_buying_addpointurse"</span>;
+
+    <span class="hljs-comment">//添加积分消息队列</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String CG_BUYING_ADDPOINT = <span class="hljs-string">"cg_buying_addpoint"</span>;
+
+    <span class="hljs-comment">//完成添加积分消息队列</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String CG_BUYING_FINISHADDPOINT = <span class="hljs-string">"cg_buying_finishaddpoint"</span>;
+
+    <span class="hljs-comment">//添加积分路由key</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String CG_BUYING_ADDPOINT_KEY = <span class="hljs-string">"addpoint"</span>;
+
+    <span class="hljs-comment">//完成添加积分路由key</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String CG_BUYING_FINISHADDPOINT_KEY = <span class="hljs-string">"finishaddpoint"</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 交换机配置</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> the exchange</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Bean</span>(EX_BUYING_ADDPOINTURSE)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Exchange <span class="hljs-title">EX_DECLARE</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> ExchangeBuilder.directExchange(EX_BUYING_ADDPOINTURSE).durable(<span class="hljs-keyword">true</span>).build();
+    &#125;
+    <span class="hljs-comment">//声明队列</span>
+    <span class="hljs-meta">@Bean</span>(CG_BUYING_FINISHADDPOINT)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Queue <span class="hljs-title">QUEUE_CG_BUYING_FINISHADDPOINT</span><span class="hljs-params">()</span> </span>&#123;
+        Queue queue = <span class="hljs-keyword">new</span> Queue(CG_BUYING_FINISHADDPOINT);
+        <span class="hljs-keyword">return</span> queue;
+    &#125;
+    <span class="hljs-comment">//声明队列</span>
+    <span class="hljs-meta">@Bean</span>(CG_BUYING_ADDPOINT)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Queue <span class="hljs-title">QUEUE_CG_BUYING_ADDPOINT</span><span class="hljs-params">()</span> </span>&#123;
+        Queue queue = <span class="hljs-keyword">new</span> Queue(CG_BUYING_ADDPOINT);
+        <span class="hljs-keyword">return</span> queue;
+    &#125;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 绑定队列到交换机 .</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> queue    the queue</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> exchange the exchange</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span> the binding</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Binding <span class="hljs-title">BINDING_QUEUE_FINISHADDPOINT</span><span class="hljs-params">(@Qualifier(CG_BUYING_FINISHADDPOINT)</span> Queue queue, @<span class="hljs-title">Qualifier</span><span class="hljs-params">(EX_BUYING_ADDPOINTURSE)</span> Exchange exchange) </span>&#123;
+        <span class="hljs-keyword">return</span> BindingBuilder.bind(queue).to(exchange).with(CG_BUYING_FINISHADDPOINT_KEY).noargs();
+    &#125;
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Binding <span class="hljs-title">BINDING_QUEUE_ADDPOINT</span><span class="hljs-params">(@Qualifier(CG_BUYING_ADDPOINT)</span> Queue queue, @<span class="hljs-title">Qualifier</span><span class="hljs-params">(EX_BUYING_ADDPOINTURSE)</span> Exchange exchange) </span>&#123;
+        <span class="hljs-keyword">return</span> BindingBuilder.bind(queue).to(exchange).with(CG_BUYING_ADDPOINT_KEY).noargs();
+    &#125;
+&#125;</code></pre></div>
+
+
+
+<h4 id="3-3-2-定义消息监听类"><a href="#3-3-2-定义消息监听类" class="headerlink" title="3.3.2 定义消息监听类"></a>3.3.2 定义消息监听类</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AddPointListener</span> </span>&#123;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> UserService userService;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> RedisTemplate redisTemplate;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> RabbitTemplate rabbitTemplate;
+
+    <span class="hljs-meta">@RabbitListener</span>(queues = RabbitMQConfig.CG_BUYING_ADDPOINT)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">receiveMessage</span><span class="hljs-params">(String message)</span></span>&#123;
+
+        Task task = JSON.parseObject(message, Task<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+        <span class="hljs-keyword">if</span> (task == <span class="hljs-keyword">null</span> || StringUtils.isEmpty(task.getRequestBody()))&#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+
+        <span class="hljs-comment">//判断redis中是否存在内容</span>
+        Object value = redisTemplate.boundValueOps(task.getId()).get();
+        <span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span>)&#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+
+        <span class="hljs-comment">//更新用户积分</span>
+        <span class="hljs-keyword">int</span> result = userService.updateUserPoints(task);
+
+        <span class="hljs-keyword">if</span> (result&lt;=<span class="hljs-number">0</span>)&#123;
+            <span class="hljs-keyword">return</span>;
+        &#125;
+
+        <span class="hljs-comment">//返回通知</span>
+rabbitTemplate.convertAndSend(RabbitMQConfig.EX_BUYING_ADDPOINTURSE,RabbitMQConfig.CG_BUYING_FINISHADDPOINT_KEY,JSON.toJSONString(task));
+
+    &#125;
+&#125;</code></pre></div>
+
+
+
+<h4 id="3-3-3-定义修改用户积分实现"><a href="#3-3-3-定义修改用户积分实现" class="headerlink" title="3.3.3 定义修改用户积分实现"></a>3.3.3 定义修改用户积分实现</h4><p>实现思路：</p>
+<p>1）判断当前订单是否操作过</p>
+<p>2）将任务存入redis</p>
+<p>3）修改用户积分</p>
+<p>4）添加积分日志表记录</p>
+<p>5）删除redis中记录</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span>
+<span class="hljs-keyword">private</span> PointLogMapper pointLogMapper;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 修改用户积分</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> task</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-meta">@Transactional</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">updateUserPoints</span><span class="hljs-params">(Task task)</span> </span>&#123;
+        Map info = JSON.parseObject(task.getRequestBody(), Map<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+        String userName = info.get(<span class="hljs-string">"userName"</span>).toString();
+        String orderId = info.get(<span class="hljs-string">"orderId"</span>).toString();
+        <span class="hljs-keyword">int</span> point = (<span class="hljs-keyword">int</span>) info.get(<span class="hljs-string">"point"</span>);
+
+        <span class="hljs-comment">//判断当前订单是否操作过</span>
+        PointLog pointLog = pointLogMapper.findLogInfoByOrderId(orderId);
+        <span class="hljs-keyword">if</span> (pointLog != <span class="hljs-keyword">null</span>)&#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        &#125;
+
+        <span class="hljs-comment">//将任务存入redis</span>
+        redisTemplate.boundValueOps(task.getId()).set(<span class="hljs-string">"exist"</span>,<span class="hljs-number">1</span>,TimeUnit.MINUTES);
+
+        <span class="hljs-comment">//修改用户积分</span>
+        <span class="hljs-keyword">int</span> result = userMapper.updateUserPoint(userName, point);
+        <span class="hljs-keyword">if</span> (result&lt;=<span class="hljs-number">0</span>)&#123;
+            <span class="hljs-keyword">return</span> result;
+        &#125;
+
+        <span class="hljs-comment">//添加积分日志表记录</span>
+        pointLog = <span class="hljs-keyword">new</span> PointLog();
+        pointLog.setOrderId(orderId);
+        pointLog.setPoint(point);
+        pointLog.setUserId(userName);
+        result = pointLogMapper.insertSelective(pointLog);
+        <span class="hljs-keyword">if</span> (result&lt;=<span class="hljs-number">0</span>)&#123;
+            <span class="hljs-keyword">return</span> result;
+        &#125;
+
+        <span class="hljs-comment">//删除redis中的记录</span>
+        redisTemplate.delete(task.getId());
+
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    &#125;</code></pre></div>
+
+
+
+<h4 id="3-3-4-定义根据订单id查询积分日志表"><a href="#3-3-4-定义根据订单id查询积分日志表" class="headerlink" title="3.3.4 定义根据订单id查询积分日志表"></a>3.3.4 定义根据订单id查询积分日志表</h4><p>定义PointLogMapper，实现根据订单id查询</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">PointLogMapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Mapper</span>&lt;<span class="hljs-title">PointLog</span>&gt; </span>&#123;
+
+    <span class="hljs-meta">@Select</span>(<span class="hljs-string">"select * from tb_point_log where order_id=#&#123;orderId&#125;"</span>)
+    <span class="hljs-function">PointLog <span class="hljs-title">findLogInfoByOrderId</span><span class="hljs-params">(@Param(<span class="hljs-string">"orderId"</span>)</span> String orderId)</span>;
+&#125;</code></pre></div>
+
+
+
+<h3 id="3-4-订单服务删除原任务"><a href="#3-4-订单服务删除原任务" class="headerlink" title="3.4 订单服务删除原任务"></a>3.4 订单服务删除原任务</h3><h4 id="3-4-1-定义监听类"><a href="#3-4-1-定义监听类" class="headerlink" title="3.4.1 定义监听类"></a>3.4.1 定义监听类</h4><p>在订单服务中定义监听类，用于监听队列，如果队列中有消息，则删除原任务防止消息重复发送，并对任务信息进行记录</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DelTaskListener</span> </span>&#123;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> TaskService taskService;
+
+    <span class="hljs-meta">@RabbitListener</span>(queues = RabbitMQConfig.CG_BUYING_FINISHADDPOINT)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">receiveMessage</span><span class="hljs-params">(String message)</span></span>&#123;
+
+        Task task = JSON.parseObject(message, Task<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+        taskService.delTask(task);
+    &#125;
+&#125;</code></pre></div>
+
+
+
+<h4 id="3-4-2-定义任务service"><a href="#3-4-2-定义任务service" class="headerlink" title="3.4.2 定义任务service"></a>3.4.2 定义任务service</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">TaskService</span> </span>&#123;
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">delTask</span><span class="hljs-params">(Task task)</span></span>;
+&#125;</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Service</span>
+<span class="hljs-meta">@Transactional</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TaskServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">TaskService</span> </span>&#123;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> TaskMapper taskMapper;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> TaskHisMapper taskHisMapper;
+
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">delTask</span><span class="hljs-params">(Task task)</span> </span>&#123;
+        <span class="hljs-comment">//1. 设置删除时间</span>
+        task.setDeleteTime(<span class="hljs-keyword">new</span> Date());
+        Long id = task.getId();
+        task.setId(<span class="hljs-keyword">null</span>);
+
+        <span class="hljs-comment">//bean复制</span>
+        TaskHis taskHis = <span class="hljs-keyword">new</span> TaskHis();
+        BeanUtils.copyProperties(task,taskHis);
+
+       <span class="hljs-comment">//记录任务信息</span>
+        taskHisMapper.insertSelective(taskHis);
+
+        <span class="hljs-comment">//删除原任务</span>
+        task.setId(id);
+        taskMapper.deleteByPrimaryKey(task);
+    &#125;
+&#125;</code></pre></div>
+
+
+
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/SpringCloud/">SpringCloud</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/learning-note/">learning note</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/11/%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">电商项目接口文档</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/08/Euraka%E5%92%8Czookeeper%E7%9A%84%E5%8C%BA%E5%88%AB-ACP/">
+                        <span class="hidden-mobile">Euraka和zookeeper的区别(ACP)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+  <script type="text/javascript">
+    var oldLoadVa = window.onload;
+    window.onload = function () {
+      oldLoadVa && oldLoadVa();
+
+      new Valine({
+        el: "#vcomments",
+        app_id: "DX9DnwxDPkNGy5RqXDMhTA7j-gzGzoHsz",
+        app_key: "WG6HcnSSHCnML90A8ODduwi1",
+        placeholder: "说点什么",
+        path: window.location.pathname,
+        avatar: "retro",
+        meta: ["nick","mail","link"],
+        pageSize: "10",
+        lang: "zh-CN",
+        highlight: false,
+        recordIP: false,
+        serverURLs: "",
+      });
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container custom post-content mx-auto">
+      <img src="https://octodex.github.com/images/jetpacktocat.png" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
+    </div>
+  </div>
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+    <!-- APlayer 音乐播放器 -->
+    <div id="aplayer"></div>
+    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
+<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
+<script type="text/javascript">
+  var oldLoadAp = window.onload;
+  window.onload = function () {
+    oldLoadAp && oldLoadAp();
+
+    new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,
+      autoplay: 'false' === 'true',
+      loop: 'all',
+      order: 'random',
+      theme: '#b7daff',
+      preload: 'none',
+      audio: [{"name":"光るなら","artist":"Goose house","url":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.mp3","cover":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg","lrc":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.lrc","theme":"#ebd0c2"},{"name":"トリカゴ","artist":"XX:me","url":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.mp3","cover":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.jpg","lrc":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.lrc","theme":"#46718b"},{"name":"前前前世","artist":"RADWIMPS","url":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.mp3","cover":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.jpg","lrc":"https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.lrc","theme":"#505d6b"}]
+    });
+  }
+</script>
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">京ICP证123456号</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>京公网安备12345678号</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "分布式事务解决方案&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+  <script>(function (i, s, o, g, r, a, m) {
+      i['DaoVoiceObject'] = r;
+      i[r] = i[r] ||
+        function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        };
+      i[r].l = 1 * new Date();
+      a = s.createElement(o);
+      m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      a.charset = 'utf-8';
+      m.parentNode.insertBefore(a, m);
+    })(window, document, 'script', ('https:' === document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/njle6dvf8tyjdnearvsglk8hw946jea2shynmfm2.js", 'daovoice');
+    daovoice('init', {
+      app_id: "njle6dvf8tyjdnearvsglk8hw946jea2shynmfm2",
+    });
+    daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?df3bfd24a00a0340c927e9a1c1e5ef73";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+</body>
+</html>
